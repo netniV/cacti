@@ -86,52 +86,38 @@ case 'changepassword':
 	if ($error != 'ok') {
 		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>$error</span>";
+		break;
 	}
 
 	if (!secpass_check_history($_SESSION['sess_user_id'], get_nfilter_request_var('password'))) {
 		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>" . __('You cannot use a previously entered password!') . "</span>";
-	}
-
-	// Get password options for the new password
-	if (function_exists('password_hash')) {
-		$password_new = password_hash(get_nfilter_request_var('password'), PASSWORD_DEFAULT);
-	} else {
-		$password_new = '';
-	}
-	$password_old = md5(get_nfilter_request_var('password'));
-
-	$current_password_old = md5(get_nfilter_request_var('current_password'));
-
-	// Password and Confirmed password checks
-	if (function_exists('password_verify')) {
-		if ((!password_verify(get_nfilter_request_var('current_password'), $user['password'])) && $user['password'] != $current_password_old) {
-			$bad_password = true;
-			$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
-		}
-
-		if (password_verify(get_nfilter_request_var('password'), $user['password']) || $user['password'] == $password_old) {
-			$bad_password = true;
-			$errorMessage = "<span class='badpassword_message'>" . __('Your new password cannot be the same as the old password. Please try again.') . "</span>";
-		}
-	} else {
-		if ($user['password'] != $current_password_old) {
-			$bad_password = true;
-			$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
-		}
-
-		if ($user['password'] == $password_old) {
-			$bad_password = true;
-			$errorMessage = "<span class='badpassword_message'>" . __('Your new password cannot be the same as the old password. Please try again.') . "</span>";
-		}
+		break;
 	}
 
 	if (get_nfilter_request_var('password') !== (get_nfilter_request_var('confirm'))) {
-	    $bad_password = true;
+		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>" . __('Your new passwords do not match, please retype.') . "</span>";
+		break;
 	}
 
-	if ($bad_password == false && get_nfilter_request_var('password') == get_nfilter_request_var('confirm') && get_nfilter_request_var('password') != '') {
+	// Get password options for the new password
+	$current_password = get_nfilter_request_var('current_password');
+
+	// Password and Confirmed password checks
+	if (!compat_password_verify($current_password, $user['password'])) {
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+		break;
+	}
+
+	if (compat_password_verify(password, $user['password'])) {
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your new password cannot be the same as the old password. Please try again.') . "</span>";
+		break;
+	}
+
+	if (get_nfilter_request_var('password') != '') {
 		// Password change is good to go
 		if (read_config_option('secpass_expirepass') > 0) {
 			db_execute_prepared("UPDATE user_auth
@@ -172,7 +158,7 @@ case 'changepassword':
 		db_execute_prepared("UPDATE user_auth
 			SET must_change_password = '', password = ?
 			WHERE id = ?",
-			array($password_new != '' ? $password_new:$password_old, $_SESSION['sess_user_id']));
+			array($password, $_SESSION['sess_user_id']));
 
 		kill_session_var('sess_change_password');
 
