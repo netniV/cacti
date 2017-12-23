@@ -11,12 +11,16 @@ Cacti CHANGELOG
 -issue#1116: Filters not allowing "None" or "All" when editing report item
 -issue#1119: Reduced amount of data fetched for CPU usage to just the data used
 -issue#1121: Bandwidth summation not using correct locale
+-issue#1122: Fix issue with local login / potential password problems
 -issue#1130: Fix logging level issue where logs of same level as setting where not logged
 -issue#1131: Make upgrade_database.php use same version compare as /install/ system
 -issue#1133: Fix issues with variable name and debug log
 -issue#1143: ss_host_cpu.php - Division by zero / Invalid Return Value
+-issue#1146: Installation now checks URI path matchs with configuration option URL_PATH
 -issue#1153: Paginator object was not always translated
 -issue: Updated Graph pagenation and filter reset
+-issue: Resolve issues with cacti_version_compare() processing
+-issue: Zoom context menu stays open after zoom out actions
 
 1.1.28
 -issue#958: User Group Tree permissions not calculated fully
