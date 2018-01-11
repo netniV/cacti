@@ -1,0 +1,48 @@
+@charset "utf-8";
+/* CSS Document */
+.Utility {
+	color: black;
+	vertical-align: top;
+}	
+.NodeName {
+	font-weight:bold;
+	color: blue;	
+	vertical-align: top;
+}
+.NodeName2 {
+	font-weight:bold;
+	color: darkblue;
+	vertical-align: top;
+}
+.AttributeName 
+{
+	font-weight:bold;
+	color: black;
+}
+.AttributeValue
+{
+	color:blue;
+}
+.NodeValue
+{
+	color: black;
+	word-wrap: break-word;
+}
+.Element {
+	border-left-color:#00FF66;
+	border-left-width:thin;
+	border-left-style:solid;
+	padding-top:0px;
+	vertical-align: top;
+}
+.Clickable {	
+	font-weight:900;
+	color: #red;	
+	cursor:pointer;
+	vertical-align: top;
+}
+.PlaceHolder {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	max-width: 100%;
+}
