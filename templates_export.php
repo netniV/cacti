@@ -59,9 +59,18 @@ function form_save() {
 
 		if (get_nfilter_request_var('output_format') == '1') {
 			top_header();
-
-			print "<table style='width:100%;' class='center'><tr><td style='text-align:left;'><pre>" . html_escape($xml_data) . '</pre></td></tr></table>';
-
+?>
+			<table style='height:100%;width:100%;' class='center'>
+				<tr>
+					<td style='text-align:left;max-width=100%;overflow-x:hidden;'>
+						<div id="XMLHolder" class="PlaceHolder"><center>Loading xml...</center></div>
+						<link href="include/xmldisplay.css" type="text/css" rel="stylesheet">
+						<script type="text/javascript" src="include/xmldisplay.js"> </script>
+						<script> window.setTimeout(function() { LoadXMLString('XMLHolder',`<?php print $xml_data; ?>`); },100); </script>
+					</td>
+				</tr>
+			</table>
+<?php
 			bottom_footer();
 		} elseif (get_nfilter_request_var('output_format') == '2') {
 			header('Content-type: application/xml');
