@@ -120,7 +120,7 @@ function exec_background($filename, $args = '', $force_debug = false) {
 	global $config, $debug;
 
 	$level = ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_DEBUG);
-	$logfile = "/dev/null";
+	$logfile = "> /dev/null";
 	if (($force_debug || $debug) && ($config['cacti_server_os'] != 'win32')) {
 		$combined = $filename . ' ' . $args;
 		$match_count = preg_match("/[_\-\w]+\.php/", $combined, $matches);
@@ -128,7 +128,7 @@ function exec_background($filename, $args = '', $force_debug = false) {
 			$level = POLLER_VERBOSITY_NONE;
 		        $logfile = str_replace(".php", "", $matches[0]);
 			$logdate = date("Y-m-d-h-i-s");
-			$logfile = sprintf("%s-%s.log", $logfile, $logdate);
+			$logfile = sprintf(">> %s-%s.log", $logfile, $logdate);
 			@file_put_contents("/tmp/".$logfile, "Program: $filename\nArgs...: $args\nDate...: $logdate\n\n", FILE_APPEND);
 		}
 	}
@@ -139,10 +139,10 @@ function exec_background($filename, $args = '', $force_debug = false) {
 		if ($config['cacti_server_os'] == 'win32') {
 			pclose(popen("start \"Cactiplus\" /I \"" . $filename . "\" " . $args, 'r'));
 		} else {
-			exec($filename . ' ' . $args . ' >> $logfile 2>&1 &');
+			exec($filename . ' ' . $args . ' $logfile 2>&1 &');
 		}
 	} elseif (file_exists_2gb($filename)) {
-		exec($filename . ' ' . $args . ' >> $logfile 2>&1 &');
+		exec($filename . ' ' . $args . ' $logfile 2>&1 &');
 	}
 }
 
