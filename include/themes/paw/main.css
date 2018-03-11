@@ -55,6 +55,10 @@ fieldset {
 	font-size: 9px;
 }
 
+.checkboxLabel {
+	display:none;
+}
+
 /* links */
 
 a, a:active, a:visited {
@@ -969,6 +973,14 @@ legend {
 .textHeader {
 	font-size: 12px;
 	font-weight: bold;
+}
+
+.textOverflow {
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
 }
 
 .bold {

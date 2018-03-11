@@ -671,7 +671,7 @@ function displayMessages() {
 	var header  = '';
 
 	if (typeof sessionMessageTimer === 'function') {
-		clearTimeout(sessionMessageTimer);
+		clearInterval(sessionMessageTimer);
 	}
 
 	if (sessionMessage == null) {
@@ -1710,7 +1710,7 @@ function setupPageTimeout() {
 				/* fix coner case with tree refresh */
 				refreshPage = refreshPage.replace('action=tree&', 'action=tree_content&');
 				if (refreshPage.indexOf('header=false') == -1) {
-					refreshPage += (refreshPage.indexOf('?') > 0 ? '&header=fasle':'?header=false');
+					refreshPage += (refreshPage.indexOf('?') > 0 ? '&header=false':'?header=false');
 				}
 
 				$.get(refreshPage)

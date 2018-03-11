@@ -343,7 +343,7 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 /* process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*
      results to RRDtool for processing
   @arg $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool
-  @arg $remainder - don't use LIMIT if TRUE */
+  @arg $remainder - don't use LIMIT if true */
 function process_poller_output(&$rrdtool_pipe, $remainder = false) {
 	global $config, $debug;
 
@@ -860,15 +860,10 @@ function resource_cache_out($type, $path) {
 
 						/* if the file type is PHP check syntax */
 						if ($extension == 'php') {
-							if ($config['cacti_server_os'] == 'win32') {
-								$tmpfile = '%TEMP%' . DIRECTORY_SEPARATOR . 'cachecheck.php';
-								$tmpdir  = '%TEMP%';
-							} else {
-								$tmpfile = '/tmp/cachecheck.php';
-								$tmpdir  = '/tmp';
-							}
+							$tmpdir = sys_get_temp_dir();
+							$tmpfile = tempnam($tmpdir,'ccp');
 
-							if ((is_writeable($tmpdir) && !file_exists($tmpfile)) || (file_exists($tmpfile) && !is_writable($tmpfile))) {
+							if ((is_writeable($tmpdir) && !file_exists($tmpfile)) || (file_exists($tmpfile) && is_writable($tmpfile))) {
 								if (file_put_contents($tmpfile, $contents) !== false) {
 									$output = system($php_path . ' -l ' . $tmpfile, $exit);
 									if ($exit == 0) {
@@ -879,7 +874,8 @@ function resource_cache_out($type, $path) {
 											cacti_log("ERROR: Cache in cannot write to '" . $mypath . "', purge this location");
 										}
 									} else {
-										cacti_log("ERROR: PHP Source File '" . $mypath . "' from Cache has a Syntax error!", false, 'POLLER');
+										cacti_log("ERROR: PHP Source File '" . $mypath . "' from Cache has an error whilst checking syntax ($exit) whilst executing: $php_path -l $tmpfile", false, 'POLLER');
+										cacti_log("ERROR: PHP Source File '" . $mypath . "': " . str_replace("\n"," ",str_replace("\t"," ", $output)), false, 'POLLER');
 									}
 
 									unlink($tmpfile);

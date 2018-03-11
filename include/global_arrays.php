@@ -140,6 +140,9 @@ $messages = array(
 	9  => array(
 		'message' => __('The Cacti log file must have the extension \'.log\''),
 		'type' => 'error'),
+	10  => array(
+		'message' => __('Data Input for method does not appear to be whitelisted.'),
+		'type' => 'error'),
 	11  => array(
 		'message' => __('Data Source does not exist.'),
 		'type' => 'error'),
@@ -218,6 +221,9 @@ $messages = array(
 	36  => array(
 		'message' => __('The file highlighted does not exist.  Please enter a valid file name.'),
 		'type' => 'error'),
+	'field_input_dupe' => array(
+		'message' => __('The input field was previously used but has been saved'),
+		'type' => 'info'),
 	'clog_invalid' => array(
 		'message' => __('Log file specified is not a Cacti log or archive file.'),
 		'type' => 'info'),
@@ -418,13 +424,18 @@ $consolidation_functions = array(1 =>
 	'LAST'
 );
 
-$data_source_types = array(1 =>
-	'GAUGE',
-	'COUNTER',
-	'DERIVE',
-	'ABSOLUTE',
-	'COMPUTE'
+$data_source_types = array(
+	1 => 'GAUGE',
+	2 => 'COUNTER',
+	3 => 'DERIVE',
+	4 => 'ABSOLUTE',
+	5 => 'COMPUTE'
 );
+
+if (get_rrdtool_version() >= 1.5) {
+	$data_source_types[6] = 'DCOUNTER';
+	$data_source_types[7] = 'DDERIVE';
+}
 
 $rrd_font_render_modes = array(
 	RRD_FONT_RENDER_NORMAL  => __('Normal'),

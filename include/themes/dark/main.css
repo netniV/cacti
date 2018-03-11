@@ -86,6 +86,10 @@ fieldset {
 	text-align:center;
 }
 
+.checkboxLabel {
+	display:none;
+}
+
 /* links */
 
 a, a:active {
@@ -1141,6 +1145,14 @@ legend {
 .textHeader {
 	font-size: 12px;
 	font-weight: normal;
+}
+
+.textOverflow {
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
 }
 
 .bold {

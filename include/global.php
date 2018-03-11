@@ -79,29 +79,43 @@ setlocale(LC_CTYPE, 'en_US.UTF-8');
 
 /* Files that do not need http header information - Command line scripts */
 $no_http_header_files = array(
-	'cmd.php',
-	'poller.php',
-	'poller_commands.php',
-	'script_server.php',
-	'query_host_cpu.php',
-	'query_host_partitions.php',
-	'sql.php',
-	'ss_host_cpu.php',
-	'ss_host_disk.php',
-	'ss_sql.php',
 	'add_device.php',
 	'add_graphs.php',
 	'add_perms.php',
 	'add_tree.php',
+	'boost_rrdupdate.php',
+	'cmd.php',
+	'cmd_realtime.php',
 	'copy_user.php',
 	'host_update_template.php',
+	'poller_automation.php',
+	'poller_boost.php',
+	'poller_commands.php',
+	'poller_dsstats.php',
 	'poller_export.php',
 	'poller_graphs_reapply_names.php',
+	'poller_maintenance.php',
 	'poller_output_empty.php',
+	'poller.php',
+	'poller_realtime.php',
+	'poller_recovery.php',
 	'poller_reindex_hosts.php',
+	'poller_reports.php',
+	'poller_spikekill.php',
+	'query_host_cpu.php',
+	'query_host_partitions.php',
 	'rebuild_poller_cache.php',
+	'remote_agent.php',
 	'repair_database.php',
-	'structure_rra_paths.php'
+	'script_server.php',
+	'snmpagent_mibcachechild.php',
+	'snmpagent_mibcache.php',
+	'snmpagent_persist.php',
+	'sql.php',
+	'ss_host_cpu.php',
+	'ss_host_disk.php',
+	'ss_sql.php',
+	'structure_rra_paths.php',
 );
 
 $config = array();
@@ -154,6 +168,10 @@ if (!isset($resource_path)) {
 	$config['resource_path'] = $config['base_path'] . '/resource';
 } else {
 	$config['resource_path'] = $resource_path;
+}
+
+if (isset($input_whitelist)) {
+	$config['input_whitelist'] = $input_whitelist;
 }
 
 /* colors */
@@ -225,7 +243,9 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 }
 
 if ($config['poller_id'] > 1 && $config['connection'] == 'online') {
-	$boost_records = db_fetch_cell('SELECT COUNT(*) FROM poller_output_boost', '', true, $local_db_cnn_id);
+	$boost_records = db_fetch_cell('SELECT COUNT(*)
+		FROM poller_output_boost', '', true, $local_db_cnn_id);
+
 	if ($boost_records > 0) {
 		$config['connection'] = 'recovery';
 	}
@@ -340,9 +360,9 @@ include_once($config['library_path'] . '/api_automation.php');
 if ($config['is_web']) {
 	function csrf_startup() {
 		global $config;
-		csrf_conf('rewrite-js', $config['url_path'] . 'include/csrf/csrf-magic.js');
+		csrf_conf('rewrite-js', $config['url_path'] . 'include/vendor/csrf/csrf-magic.js');
 	}
-	include_once($config['include_path'] . '/csrf/csrf-magic.php');
+	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 
 	if (isset_request_var('newtheme')) {
 		unset($_SESSION['selected_theme']);
