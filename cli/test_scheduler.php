@@ -68,7 +68,7 @@ function PrintDebugVals($debugPrefix, $headerLine, $debugOutput) {
 	printf("\n| %s |", $debugVals);
 }
 
-function PrintDebug(string $mode, SchedulerConfig $config, string $typeName, string $multi, DateTime $startTime, $nextTime) {
+function PrintDebug($mode, SchedulerConfig $config, $typeName, $multi, DateTime $startTime, $nextTime) {
 	$debugMode = sprintf("Mode: %15s, ", $mode);
 	$debugPref = str_repeat(' ',strlen($debugMode));
 
@@ -107,16 +107,21 @@ function PrintDebug(string $mode, SchedulerConfig $config, string $typeName, str
 
 function ReadKey($prompt)
 {
-	stream_set_blocking(STDIN, 0);
-	readline_callback_handler_install($prompt, function() {});
-	$char = stream_get_contents(STDIN, 1);
-	readline_callback_handler_remove();
-	$status = stream_get_meta_data(STDIN);
-	stream_set_blocking(STDIN, 1);
-	return $status['timed_out'] ? false : $char;
+	if (function_exists('readline_callback_handler_install')) {
+		stream_set_blocking(STDIN, 0);
+		readline_callback_handler_install($prompt, function() {});
+		$char = stream_get_contents(STDIN, 1);
+		$status = stream_get_meta_data(STDIN);
+
+		stream_set_blocking(STDIN, 1);
+		readline_callback_handler_remove();
+		return $status['timed_out'] ? false : $char;
+	} else {
+		return ' ';
+	}
 }
 
-function PauseOrContinue(int $seconds) {
+function PauseOrContinue($seconds) {
 	$sec_time = time();
 	print "\n";
 	$prompt = "\rPress P to pause, ESC to Quit, SPACE to continue (%d): ";

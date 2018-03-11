@@ -1,12 +1,12 @@
 <?php
 class SchedulerTimes implements Countable, ArrayAccess, SeekableIterator {
-	protected $values = [];
+	protected $values = array();
 
 	function __construct() {
-		$this->values = [];
+		$this->values = array();
 	}
 
-	static function FromArray(array $values) : SchedulerDates {
+	static function FromArray(array $values) {
 		$dates = new SchedulerDates;
 		foreach ($values as $value) {
 			if ($value != null) {
@@ -30,7 +30,7 @@ class SchedulerTimes implements Countable, ArrayAccess, SeekableIterator {
 		}
 	}
 
-	function toArray() : array {
+	function toArray() {
 		$array = clone $this->values;
 		return $array;
 	}
@@ -40,7 +40,7 @@ class SchedulerTimes implements Countable, ArrayAccess, SeekableIterator {
 		//file_put_contents('/tmp/array.log',str_replace("\n",'',var_export($this->values, true))."\n", FILE_APPEND);
 	}
 
-	function count() : int {
+	function count() {
 		$this->logit(__FUNCTION__);
 		return sizeof($this->values);
 	}

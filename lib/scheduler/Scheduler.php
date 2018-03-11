@@ -7,7 +7,7 @@ class Scheduler {
 		return 1 + ($week < $firstWeekOfMonth ? $week : $week - $firstWeekOfMonth);
 	}
 
-	public static function getNextTime(DateTime $startTime, SchedulerConfig $config) : DateTime {
+	public static function getNextTime(DateTime $startTime, SchedulerConfig $config) {
 		$schedulerClassType = SchedulerType::getNameFromValue($config->Type, true);
 		$schedulerClass = "SchedulerType$schedulerClassType";
 
@@ -19,7 +19,7 @@ class Scheduler {
 		return $scheduler->getNextTime();
 	}
 
-	public static function getNextTimes(DateTime $startTime, int $count, SchedulerConfig $config) : SchedulerTimes {
+	public static function getNextTimes(DateTime $startTime, $count, SchedulerConfig $config) {
 		$schedulerClassType = SchedulerType::getNameFromValue($config->Type, true);
 		$schedulerClass = "SchedulerType$schedulerClassType";
 

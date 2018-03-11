@@ -17,7 +17,7 @@ abstract class SchedulerDay extends SchedulerEnum implements SchedulerAllowsMult
 	const Saturday = 7;
 
 	public static function getAllowedTypes() {
-		$types = [];
+		$types = array();
 		$types[] = SchedulerType::Weekly;
 		$types[] = SchedulerType::MonthlyOnDay;
 		return $types;
@@ -39,7 +39,7 @@ abstract class SchedulerMonth extends SchedulerEnum implements SchedulerAllowsMu
 	const December = 12;
 
 	public static function getAllowedTypes() {
-		$types = [];
+		$types = array();
 		$types[] = SchedulerType::Monthly;
 		$types[] = SchedulerType::MonthlyOnDay;
 		return $types;
@@ -54,7 +54,7 @@ abstract class SchedulerWeek extends SchedulerEnum implements SchedulerAllowsMul
 	const Last = 32;
 
 	public static function getAllowedTypes() {
-		$types = [];
+		$types = array();
 		$types[] = SchedulerType::Monthly;
 		return $types;
 	}
@@ -95,7 +95,7 @@ abstract class SchedulerDayOfMonth extends SchedulerArray implements SchedulerAl
 	}
 
 	public static function getAllowedTypes() {
-		$types = [];
+		$types = array();
 		$types[] = SchedulerType::Monthly;
 		return $types;
 	}
@@ -151,7 +151,7 @@ abstract class SchedulerEnum {
 	private static $constCacheArray = NULL;
 	private static function getConstants() {
 		if (self::$constCacheArray == NULL) {
-			self::$constCacheArray = [];
+			self::$constCacheArray = array();
 		}
 
 		$calledClass = get_called_class();

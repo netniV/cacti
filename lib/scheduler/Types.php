@@ -16,7 +16,7 @@ abstract class SchedulerTypeBase implements IScheduler {
 		$this->startTime = clone $startTime;
 	}
 
-	function getStartTime() : DateTime {
+	function getStartTime() {
 		$dateTime = clone $this->startTime;
 		return $dateTime;
 	}
@@ -25,7 +25,7 @@ abstract class SchedulerTypeBase implements IScheduler {
 		$this->lastTime = clone $lastTime;
 	}
 
-	function getLastTime() : DateTime {
+	function getLastTime() {
 		$dateTime = clone $this->lastTime;
 		return ($this->startTime > $dateTime) ? $this->startTime : $dateTime;
 	}
@@ -34,21 +34,21 @@ abstract class SchedulerTypeBase implements IScheduler {
 		$this->config = clone $config;
 	}
 
-	function getConfig() : SchedulerConfig {
+	function getConfig() {
 		$config = clone $this->config;
 		return $config;
 	}
 
-	function getNextTime() : DateTime {
+	function getNextTime() {
 		return $this->getNextTimeSinceTime($this->lastTime);
 	}
 
-	function getNextTimes(int $count) : SchedulerTimes  {
+	function getNextTimes($count) {
 		$sinceTime = $this->getLastTime();
 		return $this->getNextTimesSinceTime($count, $sinceTime);
 	}
 
-	function getNextTimesSinceTime(int $count, DateTime $dateTime) {
+	function getNextTimesSinceTime($count, DateTime $dateTime) {
 		$times = new SchedulerTimes();
 
 		while ($count > 0) {
@@ -63,14 +63,14 @@ abstract class SchedulerTypeBase implements IScheduler {
 }
 
 class SchedulerTypeManual extends SchedulerTypeBase implements IScheduler {
-	function getNextTimeSinceTime(DateTime $sinceTime) : DateTime {
+	function getNextTimeSinceTime(DateTime $sinceTime) {
 		$now = new DateTime();
 		return ($now < $sinceTime) ? $sinceTime : $now;
 	}
 }
 
 class SchedulerTypeDaily extends SchedulerTypeBase implements IScheduler {
-	function getNextTimeSinceTime(DateTime $sinceTime) : DateTime {
+	function getNextTimeSinceTime(DateTime $sinceTime) {
 		$dateTime = clone $sinceTime;
 		$dateTime->add(new DateInterval('P'.$this->getConfig()->Repeat.'D'));
 		return $dateTime;
@@ -78,7 +78,7 @@ class SchedulerTypeDaily extends SchedulerTypeBase implements IScheduler {
 }
 
 class SchedulerTypeWeekly extends SchedulerTypeBase implements IScheduler {
-	function getNextTimeSinceTime(DateTime $sinceTime) : DateTime {
+	function getNextTimeSinceTime(DateTime $sinceTime) {
 		$dateTime = clone $sinceTime;
 		$validDays = $this->getConfig()->Day;
 		$validTimes = new SchedulerTimes();
@@ -114,7 +114,7 @@ class SchedulerTypeWeekly extends SchedulerTypeBase implements IScheduler {
 }
 
 class SchedulerTypeMonthly extends SchedulerTypeBase implements IScheduler, SchedulerAllowsMultiple {
-	function getNextTimeSinceTime(DateTime $sinceTime) : DateTime {
+	function getNextTimeSinceTime(DateTime $sinceTime) {
 		$dateTime = clone $sinceTime;
 		$dateYear = clone $sinceTime;
 		$dateYear->modify('+1 year');
@@ -159,7 +159,7 @@ class SchedulerTypeMonthly extends SchedulerTypeBase implements IScheduler, Sche
 }
 
 class SchedulerTypeMonthlyOnDay extends SchedulerTypeBase implements IScheduler, SchedulerAllowsMultiple {
-	function getNextTimeSinceTime(DateTime $sinceTime) : DateTime {
+	function getNextTimeSinceTime(DateTime $sinceTime) {
 		$dateTime = clone $sinceTime;
 		$dateYear = clone $sinceTime;
 		$dateYear->modify('+1 year');
