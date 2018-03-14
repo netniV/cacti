@@ -1378,18 +1378,16 @@ function get_color($color_id) {
    @arg $local_graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */
 function get_graph_title($local_graph_id) {
-	$graph = db_fetch_row_prepared('SELECT
-		graph_local.host_id,
-		graph_local.snmp_query_id,
-		graph_local.snmp_index,
-		graph_templates_graph.local_graph_id,
-		graph_templates_graph.title
-		FROM (graph_templates_graph, graph_local)
-		WHERE graph_templates_graph.local_graph_id = graph_local.id
-		AND graph_local.id = ?', array($local_graph_id));
+	$graph = db_fetch_row_prepared('SELECT gl.host_id, gl.snmp_query_id,
+		gl.snmp_index, gtg.local_graph_id, gtg.t_title, gtg.title
+		FROM graph_templates_graph AS gtg
+		INNER JOIN graph_local AS gl
+		ON gtg.local_graph_id = gl.id
+		WHERE gl.id = ?',
+		array($local_graph_id));
 
 	if (sizeof($graph)) {
-		if ((strstr($graph['title'], '|')) && (!empty($graph['host_id']))) {
+		if (strstr($graph['title'], '|') && !empty($graph['host_id']) && $graph['t_title'] == '') {
 			$graph['title'] = substitute_data_input_data($graph['title'], $graph, 0);
 			return expand_title($graph['host_id'], $graph['snmp_query_id'], $graph['snmp_index'], $graph['title']);
 		} else {
@@ -3044,13 +3042,7 @@ function get_browser_query_string() {
 /* get_current_page - returns the basename of the current page in a web server friendly way
    @returns - the basename of the current script file */
 function get_current_page($basename = true) {
-	if (isset($_SERVER['PHP_SELF']) && $_SERVER['PHP_SELF'] != '') {
-		if ($basename) {
-			return basename($_SERVER['PHP_SELF']);
-		} else {
-			return $_SERVER['PHP_SELF'];
-		}
-	} elseif (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
+	if (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
 		if ($basename) {
 			return basename($_SERVER['SCRIPT_NAME']);
 		} else {

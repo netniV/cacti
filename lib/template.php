@@ -802,7 +802,7 @@ function change_graph_template($local_graph_id, $graph_template_id, $intrusive =
 					FROM data_template_rrd WHERE id = ?',
 					array($template_item['task_item_id']));
 
-				if ($data_source_name != '' && sizeof($local_data_ids)) {
+				if ($data_source_name != '' && $local_data_ids != '') {
 					$task_item_id = db_fetch_cell_prepared('SELECT DISTINCT id
 						FROM data_template_rrd WHERE
 						local_data_id IN (' . $local_data_ids . ')
@@ -1050,6 +1050,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 		if (sizeof($suggested_values)) {
 			foreach ($suggested_values as $suggested_value) {
 				/* once we find a match; don't try to find more */
+<<<<<<< HEAD
 				$subs_string = substitute_snmp_query_data($suggested_value['text'], $host_id,
 					$snmp_query_array['snmp_query_id'], $snmp_query_array['snmp_index'],
 					read_config_option('max_data_query_field_length'));
@@ -1063,6 +1064,26 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 							array($suggested_value['text'], $cache_array['local_graph_id']));
 					} else {
 						cacti_log('ERROR: Suggested value column error.  Column ' . $suggested_value['field_name'] . ' for Data Query ID ' . $snmp_query_array['snmp_query_id'] . ' and Graph Template ID ' . $graph_template_id .  ' is not a compatible field name.  Please correct this suggested value mapping', false);
+=======
+				if (!isset($suggested_values_graph[$graph_template_id][$suggested_value['field_name']])) {
+					$subs_string = substitute_snmp_query_data($suggested_value['text'], $host_id,
+						$snmp_query_array['snmp_query_id'], $snmp_query_array['snmp_index'],
+						read_config_option('max_data_query_field_length'));
+
+					/* if there are no '|' characters, all of the substitutions were successful */
+					if (!strstr($subs_string, '|query')) {
+						if (db_column_exists('graph_templates_graph', $suggested_value['field_name'])) {
+							db_execute_prepared('UPDATE graph_templates_graph
+								SET ' . $suggested_value['field_name'] . ' = ?
+								WHERE local_graph_id = ?',
+								array($suggested_value['text'], $cache_array['local_graph_id']));
+
+							/* once we find a working value, stop */
+							$suggested_values_graph[$graph_template_id][$suggested_value['field_name']] = true;
+						} else {
+							cacti_log('ERROR: Suggested value column error.  Column ' . $suggested_value['field_name'] . ' for Data Query ID ' . $snmp_query_array['snmp_query_id'] . ' and Graph Template ID ' . $graph_template_id .  ' is not a compatible field name.  Please correct this suggested value mapping', false);
+						}
+>>>>>>> upstream/develop
 					}
 
 					/* once the suggested values matches, break out of for loop */
@@ -1175,6 +1196,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 					if (sizeof($suggested_values)) {
 						foreach ($suggested_values as $suggested_value) {
 							/* once we find a match; don't try to find more */
+<<<<<<< HEAD
 							$subs_string = substitute_snmp_query_data($suggested_value['text'], $host_id,
 								$snmp_query_array['snmp_query_id'],
 								$snmp_query_array['snmp_index'], read_config_option('max_data_query_field_length'));
@@ -1193,6 +1215,39 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 										array($suggested_value['text'], $cache_array['local_data_id'][$data_template['id']]));
 								} else {
 									cacti_log('ERROR: Suggested value column error.  Column ' . $suggested_value['field_name'] . ' for Data Query ID ' . $snmp_query_array['snmp_query_id'] . ' and Data Template ID ' . $data_template['id'] .  ' is not a compatible field name for tables data_template_data and data_template_rrd.  Please correct this suggested value mapping', false);
+=======
+							if (!isset($suggested_values_ds[$data_template['id']][$suggested_value['field_name']])) {
+								$subs_string = substitute_snmp_query_data($suggested_value['text'], $host_id,
+									$snmp_query_array['snmp_query_id'],
+									$snmp_query_array['snmp_index'], read_config_option('max_data_query_field_length'));
+
+								/* if there are no '|' characters, all of the substitutions were successful */
+								if (!strstr($subs_string, '|query')) {
+									$columns = db_fetch_row("SHOW COLUMNS
+										FROM data_template_data
+										LIKE '" . $suggested_value['field_name'] . "'");
+
+									if (sizeof($columns)) {
+										db_execute_prepared('UPDATE data_template_data
+											SET ' . $suggested_value['field_name'] . ' = ?
+											WHERE local_data_id = ?',
+											array($suggested_value['text'], $cache_array['local_data_id'][$data_template['id']]));
+									}
+
+									/* once we find a working value, stop */
+									$suggested_values_ds[$data_template['id']][$suggested_value['field_name']] = true;
+
+									$columns = db_fetch_row("SHOW COLUMNS
+										FROM data_template_rrd
+										LIKE '" . $suggested_value['field_name'] . "'");
+
+									if (sizeof($columns) && !substr_count($subs_string, '|')) {
+										db_execute_prepared('UPDATE data_template_rrd
+											SET ' . $suggested_value['field_name'] . ' = ?
+											WHERE local_data_id = ?',
+											array($suggested_value['text'], $cache_array['local_data_id'][$data_template['id']]));
+									}
+>>>>>>> upstream/develop
 								}
 
 								/* after a metch is found, stop searching */
