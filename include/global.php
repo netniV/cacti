@@ -79,28 +79,43 @@ setlocale(LC_CTYPE, 'en_US.UTF-8');
 
 /* Files that do not need http header information - Command line scripts */
 $no_http_header_files = array(
-	'cmd.php',
-	'poller.php',
-	'poller_commands.php',
-	'script_server.php',
-	'query_host_cpu.php',
-	'query_host_partitions.php',
-	'sql.php',
-	'ss_host_cpu.php',
-	'ss_host_disk.php',
-	'ss_sql.php',
 	'add_device.php',
 	'add_graphs.php',
 	'add_perms.php',
 	'add_tree.php',
+	'boost_rrdupdate.php',
+	'cmd.php',
+	'cmd_realtime.php',
 	'copy_user.php',
 	'host_update_template.php',
+	'poller_automation.php',
+	'poller_boost.php',
+	'poller_commands.php',
+	'poller_dsstats.php',
+	'poller_export.php',
 	'poller_graphs_reapply_names.php',
+	'poller_maintenance.php',
 	'poller_output_empty.php',
+	'poller.php',
+	'poller_realtime.php',
+	'poller_recovery.php',
 	'poller_reindex_hosts.php',
+	'poller_reports.php',
+	'poller_spikekill.php',
+	'query_host_cpu.php',
+	'query_host_partitions.php',
 	'rebuild_poller_cache.php',
+	'remote_agent.php',
 	'repair_database.php',
-	'structure_rra_paths.php'
+	'script_server.php',
+	'snmpagent_mibcachechild.php',
+	'snmpagent_mibcache.php',
+	'snmpagent_persist.php',
+	'sql.php',
+	'ss_host_cpu.php',
+	'ss_host_disk.php',
+	'ss_sql.php',
+	'structure_rra_paths.php',
 );
 
 $config = array();
@@ -254,6 +269,7 @@ if ($config['is_web']) {
 	/* set the maximum post size */
 	ini_set('post_max_size', '8M');
 	ini_set('max_input_vars', '5000');
+	ini_set('session.cookie_httponly', '1');
 
 	/* we don't want these pages cached */
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -261,6 +277,7 @@ if ($config['is_web']) {
 	header('Cache-Control: no-store, no-cache, must-revalidate');
 	header('Cache-Control: post-check=0, pre-check=0', false);
 	header('Pragma: no-cache');
+	header('X-Frame-Options: SAMEORIGIN');
 	/* prevent IE from silently rejects cookies sent from third party sites. */
 	header('P3P: CP="CAO PSA OUR"');
 

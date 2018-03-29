@@ -975,6 +975,14 @@ legend {
 	font-weight: bold;
 }
 
+.textOverflow {
+	max-width: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
+
 .bold {
 	font-weight: bold;
 }
@@ -1069,7 +1077,6 @@ legend {
 	padding: 0px;
 	white-space: nowrap;
 	overflow: hidden;
-	vertical-align: middle;
 }
 
 .cactiTableButton i {

@@ -617,9 +617,9 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 
 	/* format the message */
 	if ($environ == 'POLLER') {
-		$message = "$date - " . $environ . ': Poller[' . $config['poller_id'] . '] ' . $string . "\n";
+		$prefix = "$date - " . $environ . ': Poller[' . $config['poller_id'] . '] ';
 	} else {
-		$message = "$date - " . $environ . ' ' . $string . "\n";
+		$prefix = "$date - " . $environ . ' ';
 	}
 
 	/* Log to Logfile */
@@ -632,6 +632,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 		$fp = @fopen($logfile, 'a');
 
 		if ($fp) {
+			$message = clean_up_lines($prefix . $string) . "\n";
 			@fwrite($fp, $message);
 			fclose($fp);
 		}
@@ -779,7 +780,12 @@ function determine_display_log_entry($message_type, $line, $filter) {
 
 	/* match any lines that match the search string */
 	if ($display === true && $filter != '') {
-		return (strpos(strtolower($line), $filter) !== false || preg_match('/' . $filter . '/i', $line));
+		if (stripos($line, $filter) !== false) {
+			return $line;
+		} elseif (validate_is_regex($filter) && preg_match('/' . $filter . '/i', $line)) {
+			return $line;
+		}
+		return false;
 	}
 
 	return $display;
@@ -1281,6 +1287,14 @@ function stri_replace($find, $replace, $string) {
 	return (join($replace, $parts));
 }
 
+/* clean_up_lines - runs a string through a regular expression designed to remove
+     new lines and the spaces around them
+   @arg $string - the string to modify/clean
+   @returns - the modified string */
+function clean_up_lines($string) {
+	return preg_replace('/\s*[\r\n]+\s*/',' ', $string);
+}
+
 /* clean_up_name - runs a string through a series of regular expressions designed to
      eliminate "bad" characters
    @arg $string - the string to modify/clean
@@ -1364,18 +1378,16 @@ function get_color($color_id) {
    @arg $local_graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */
 function get_graph_title($local_graph_id) {
-	$graph = db_fetch_row_prepared('SELECT
-		graph_local.host_id,
-		graph_local.snmp_query_id,
-		graph_local.snmp_index,
-		graph_templates_graph.local_graph_id,
-		graph_templates_graph.title
-		FROM (graph_templates_graph, graph_local)
-		WHERE graph_templates_graph.local_graph_id = graph_local.id
-		AND graph_local.id = ?', array($local_graph_id));
+	$graph = db_fetch_row_prepared('SELECT gl.host_id, gl.snmp_query_id,
+		gl.snmp_index, gtg.local_graph_id, gtg.t_title, gtg.title
+		FROM graph_templates_graph AS gtg
+		INNER JOIN graph_local AS gl
+		ON gtg.local_graph_id = gl.id
+		WHERE gl.id = ?',
+		array($local_graph_id));
 
 	if (sizeof($graph)) {
-		if ((strstr($graph['title'], '|')) && (!empty($graph['host_id']))) {
+		if (strstr($graph['title'], '|') && !empty($graph['host_id']) && $graph['t_title'] == '') {
 			$graph['title'] = substitute_data_input_data($graph['title'], $graph, 0);
 			return expand_title($graph['host_id'], $graph['snmp_query_id'], $graph['snmp_index'], $graph['title']);
 		} else {
@@ -3030,13 +3042,7 @@ function get_browser_query_string() {
 /* get_current_page - returns the basename of the current page in a web server friendly way
    @returns - the basename of the current script file */
 function get_current_page($basename = true) {
-	if (isset($_SERVER['PHP_SELF']) && $_SERVER['PHP_SELF'] != '') {
-		if ($basename) {
-			return basename($_SERVER['PHP_SELF']);
-		} else {
-			return $_SERVER['PHP_SELF'];
-		}
-	} elseif (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
+	if (isset($_SERVER['SCRIPT_NAME']) && $_SERVER['SCRIPT_NAME'] != '') {
 		if ($basename) {
 			return basename($_SERVER['SCRIPT_NAME']);
 		} else {
@@ -3386,7 +3392,7 @@ function sanitize_search_string($string) {
  * @returns string    - the sanitized uri
  */
 function sanitize_uri($uri) {
-	static $drop_char_match =   array('^', '$', '<', '>', '`', '\'', '"', '|', '+', '[', ']', '{', '}', ';', '!');
+	static $drop_char_match =   array('^', '$', '<', '>', '`', "'", '"', '|', '+', '[', ']', '{', '}', ';', '!', '(', ')');
 	static $drop_char_replace = array( '', '',  '',  '',  '',  '',   '',  '',  '',  '',  '',  '',  '',  '',  '');
 
 	return str_replace($drop_char_match, $drop_char_replace, strip_tags(urldecode($uri)));
@@ -3594,7 +3600,7 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
 	if ($from == '') {
 		$from     = read_config_option('settings_from_email');
 		$fromname = read_config_option('settings_from_name');
-	} elseif ($fromname = '') {
+	} elseif ($fromname == '') {
 		$full_name = db_fetch_cell_prepared('SELECT full_name
 			FROM user_auth
 			WHERE email_address = ?',
@@ -3607,8 +3613,7 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
 		}
 	}
 
-	$from = array($from, $fromname);
-
+	$from = array(0 => $from, 1 => $fromname);
 	return mailer($from, $to, '', '', '', $subject, $body, '', $attachments, $headers, $html);
 }
 
@@ -3723,7 +3728,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 				$mail->Host = $secure . '://' . $mail->Host;
 			}
 		} else {
-			$mail->SMTPSecure = false;
+			$mail->SMTPAutoTLS = false;
 			$mail->SMTPSecure = false;
 		}
 	}
@@ -3929,6 +3934,9 @@ function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure
 		if (substr_count($host, ':') == 0) {
 			$host = $secure . '://' . $host;
 		}
+	} else {
+		$mail->SMTPAutoTLS = false;
+		$mail->SMTPSecure = false;
 	}
 
 	//Enable connection-level debug output
@@ -4263,7 +4271,7 @@ function cacti_debug_backtrace($entry = '', $html = false) {
 		echo "<table style='width:100%;text-align:center;'><tr><td>$s</td></tr></table>\n";
 	}
 
-	cacti_log(trim("$entry Backtrace: $s"), false);
+	cacti_log(trim("$entry Backtrace: " . clean_up_lines($s)), false);
 }
 
 /*	calculate_percentiles - Given and array of numbers, calculate the Nth percentile,

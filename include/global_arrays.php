@@ -110,6 +110,8 @@ $cacti_version_codes = array(
 	'1.1.34' => '0101',
 	'1.1.35' => '0101',
 	'1.1.36' => '0101',
+	'1.1.37' => '0101',
+	'1.2.0'  => '0101',
 );
 
 $messages = array(
@@ -221,6 +223,9 @@ $messages = array(
 	36  => array(
 		'message' => __('The file highlighted does not exist.  Please enter a valid file name.'),
 		'type' => 'error'),
+	'field_input_dupe' => array(
+		'message' => __('The input field was previously used but has been saved'),
+		'type' => 'info'),
 	'clog_invalid' => array(
 		'message' => __('Log file specified is not a Cacti log or archive file.'),
 		'type' => 'info'),
