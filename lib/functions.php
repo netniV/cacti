@@ -3383,7 +3383,7 @@ function sanitize_search_string($string) {
  * @returns string    - the sanitized uri
  */
 function sanitize_uri($uri) {
-	static $drop_char_match =   array('^', '$', '<', '>', '`', '\'', '"', '|', '+', '[', ']', '{', '}', ';', '!');
+	static $drop_char_match =   array('^', '$', '<', '>', '`', "'", '"', '|', '+', '[', ']', '{', '}', ';', '!', '(', ')');
 	static $drop_char_replace = array( '', '',  '',  '',  '',  '',   '',  '',  '',  '',  '',  '',  '',  '',  '');
 
 	return str_replace($drop_char_match, $drop_char_replace, strip_tags(urldecode($uri)));
@@ -3719,7 +3719,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 				$mail->Host = $secure . '://' . $mail->Host;
 			}
 		} else {
-			$mail->SMTPSecure = false;
+			$mail->SMTPAutoTLS = false;
 			$mail->SMTPSecure = false;
 		}
 	}
@@ -3925,6 +3925,9 @@ function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure
 		if (substr_count($host, ':') == 0) {
 			$host = $secure . '://' . $host;
 		}
+	} else {
+		$mail->SMTPAutoTLS = false;
+		$mail->SMTPSecure = false;
 	}
 
 	//Enable connection-level debug output
