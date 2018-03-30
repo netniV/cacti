@@ -32,181 +32,190 @@ if (!isset($_SERVER['argv'][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($
 $no_http_headers = true;
 
 include(dirname(__FILE__).'/../include/global.php');
+include_once($config['base_path'].'/lib/cli.php');
 include_once($config['base_path'].'/lib/api_automation_tools.php');
 include_once($config['base_path'].'/lib/data_query.php');
 
+/* Define exit codes */
+Cli::RegisterHelpFunction('display_help');
+Cli::RegisterExit('EXIT_INVALID_HOST',              "ERROR: You must supply a valid host-id for all hosts!\n");
+Cli::RegisterExit('EXIT_INVALID_DATA_QUERY_ID',     "ERROR: You must supply a numeric data-query-id for all hosts!\n");
+Cli::RegisterExit('EXIT_INVALID_REINDEX_METHOD',    "ERROR: You must supply a valid reindex method for all hosts!\n");
+Cli::RegisterExit('EXIT_BAD_HOST_ID',               "ERROR: Unknown Host Id (%s)\n");
+Cli::RegisterExit('EXIT_BAD_QUERY_ID',              "ERROR: Unknown Data Query Id (%s)\n");
+Cli::RegisterExit('EXIT_BAD_QUERY_ASSOCIATION',     "ERROR: Data Query is already associated for host: (%s: %s) data query (%s: %s) reindex method (%s: %s)\n");
+Cli::RegisterExit('EXIT_BAD_QUERY_ADD',             "ERROR: Data Query is already associated for host: (%s: %s) data query (%s: %s) reindex method (%s: %s)\n");
+
 /* process calling arguments */
-$parms = $_SERVER['argv'];
-array_shift($parms);
 
-if (sizeof($parms)) {
-	$displayHosts 		= false;
-	$displayDataQueries = false;
-	$quietMode			= false;
+/* setup defaults */
+$displayHosts 		= false;
+$displayDataQueries = false;
+$quietMode			= false;
 
-	unset($host_id);
-	unset($data_query_id);
-	unset($reindex_method);
+unset($host_id);
+unset($data_query_id);
+unset($reindex_method);
 
-	foreach($parms as $parameter) {
-		if (strpos($parameter, '=')) {
-			list($arg, $value) = explode('=', $parameter);
-		} else {
-			$arg = $parameter;
-			$value = '';
-		}
+$shortopts = "dVvHh";
+$longopts = array(
+	'debug',
+	'host-id:',
+	'data-query-id',
+	'reindex-method',
+	'version',
+	'help',
+	'list-hosts',
+	'list-data-queries',
+	'quiet'
+);
 
-		switch ($arg) {
-			case '-d':
-				$debug = true;
+$options = Cli::GetOpts($shortopts, $longopts, $remaining);
+foreach ($options as $arg => $value) {
+	switch ($arg) {
+		case '-d':
+			$debug = true;
+			break;
 
-				break;
-			case '--host-id':
-				$host_id = trim($value);
-				if (!is_numeric($host_id)) {
-					echo "ERROR: You must supply a valid host-id to run this script!\n";
-					exit(1);
-				}
+		case '--host-id':
+			$host_id = trim($value);
+			if (!is_numeric($host_id)) {
+				Cli::Exit(EXIT_INVALID_HOST);
+			}
 	
-				break;
-			case '--data-query-id':
-				$data_query_id = $value;
-				if (!is_numeric($data_query_id)) {
-					echo "ERROR: You must supply a numeric data-query-id for all hosts!\n";
-					exit(1);
+			break;
+
+		case '--data-query-id':
+			$data_query_id = $value;
+			if (!is_numeric($data_query_id)) {				
+				Cli::Exit(EXIT_INVALID_DATA_QUERY_ID);
+			}
+
+			break;
+
+		case '--reindex-method':
+			if (is_numeric($value) &&
+				($value >= DATA_QUERY_AUTOINDEX_NONE) &&
+				($value <= DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION)) {
+				$reindex_method = $value;
+			} else {
+				switch (strtolower($value)) {
+					case 'none':
+						$reindex_method = DATA_QUERY_AUTOINDEX_NONE;
+						break;
+					case 'uptime':
+						$reindex_method = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
+						break;
+					case 'index':
+						$reindex_method = DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE;
+						break;
+					case 'fields':
+						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
+						break;
+					default:
+						Cli::Exit(EXIT_INVALID_REINDEX_METHOD);
 				}
+			}
+			break;
 
-				break;
-			case '--reindex-method':
-				if (is_numeric($value) &&
-					($value >= DATA_QUERY_AUTOINDEX_NONE) &&
-					($value <= DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION)) {
-					$reindex_method = $value;
-				} else {
-					switch (strtolower($value)) {
-						case 'none':
-							$reindex_method = DATA_QUERY_AUTOINDEX_NONE;
-							break;
-						case 'uptime':
-							$reindex_method = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
-							break;
-						case 'index':
-							$reindex_method = DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE;
-							break;
-						case 'fields':
-							$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
-							break;
-						default:
-							echo "ERROR: You must supply a valid reindex method for all hosts!\n";
-							exit(1);
-					}
-				}
-				break;
-			case '--version':
-			case '-V':
-			case '-v':
-				display_version();
-				exit;
-			case '--help':
-			case '-H':
-			case '-h':
-				display_help();
-				exit;
-			case '--list-hosts':
-				$displayHosts = true;
-				break;
-			case '--list-data-queries':
-				$displayDataQueries = true;
-				break;
-			case '--quiet':
-				$quietMode = true;
-				break;
-			default:
-				echo "ERROR: Invalid Argument: ($arg)\n\n";
-				display_help();
-				exit(1);
-		}
+		case '--version':
+		case '-V':
+		case '-v':
+			display_version();
+			Cli::Exit(EXIT_NORMAL);
+
+		case '--help':
+		case '-H':
+		case '-h':
+			display_help();
+			Cli::Exit(EXIT_NORMAL);
+
+		case '--list-hosts':
+			$displayHosts = true;
+			break;
+
+		case '--list-data-queries':
+			$displayDataQueries = true;
+			break;
+
+		case '--quiet':
+			$quietMode = true;
+			break;
+
+		default:
+			display_help();
+			Cli::Exit(EXIT_ARGERR, $arg, true);
 	}
+}
 
-	/* list options, recognizing $quietMode */
-	if ($displayHosts) {
-		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
-		exit;
-	}
-	if ($displayDataQueries) {
-		$data_queries = getSNMPQueries();
-		displaySNMPQueries($data_queries, $quietMode);
-		exit;
-	}
+/* list options, recognizing $quietMode */
+if ($displayHosts) {
+	$hosts = getHosts();
+	displayHosts($hosts, $quietMode);
+	Cli::Exit(EXIT_NORMAL);
+}
+if ($displayDataQueries) {
+	$data_queries = getSNMPQueries();
+	displaySNMPQueries($data_queries, $quietMode);
+	Cli::Exit(EXIT_NORMAL);
+}
 
-	/*
-	 * verify required parameters
-	 * for update / insert options
-	 */
-	if (!isset($host_id)) {
-		echo "ERROR: You must supply a valid host-id for all hosts!\n";
-		exit(1);
-	}
+/*
+	* verify required parameters
+	* for update / insert options
+	*/
+if (!isset($host_id)) {
+	Cli::Exit(EXIT_INVALID_HOST);
+}
 
-	if (!isset($data_query_id)) {
-		echo "ERROR: You must supply a valid data-query-id for all hosts!\n";
-		exit(1);
-	}
+if (!isset($data_query_id)) {		
+	Cli::Exit(EXIT_INVALID_DATA_QUERY_ID);
+}
 
-	if (!isset($reindex_method)) {
-		echo "ERROR: You must supply a valid reindex-method for all hosts!\n";
-		exit(1);
-	}
+if (!isset($reindex_method)) {
+	Cli::Exit(EXIT_INVALID_REINDEX_METHOD);
+}
 
 
-	/*
-	 * verify valid host id and get a name for it
-	 */
-	$host_name = db_fetch_cell('SELECT hostname FROM host WHERE id = ' . $host_id);
-	if (!isset($host_name)) {
-		echo "ERROR: Unknown Host Id ($host_id)\n";
-		exit(1);
-	}
+/*
+	* verify valid host id and get a name for it
+	*/
+$host_name = db_fetch_cell('SELECT hostname FROM host WHERE id = ' . $host_id);
+if (!isset($host_name)) {		
+	Cli::Exit(EXIT_BAD_HOST_ID, $host_id); 
+}
 
-	/*
-	 * verify valid data query and get a name for it
-	 */
-	$data_query_name = db_fetch_cell('SELECT name FROM snmp_query WHERE id = ' . $data_query_id);
-	if (!isset($data_query_name)) {
-		echo "ERROR: Unknown Data Query Id ($data_query_id)\n";
-		exit(1);
-	}
+/*
+	* verify valid data query and get a name for it
+	*/
+$data_query_name = db_fetch_cell('SELECT name FROM snmp_query WHERE id = ' . $data_query_id);
+if (!isset($data_query_name)) {
+	Cli::Exit(EXIT_BAD_QUERY_ID, $data_query_id);
+}
 
-	/*
-	 * Now, add the data query and run it once to get the cache filled
-	 */
-	$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
-	if ((isset($exists_already)) &&
-		($exists_already > 0)) {
-		echo "ERROR: Data Query is already associated for host: ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
-		exit(1);
-	} else {
-		db_execute('REPLACE INTO host_snmp_query 
-			(host_id,snmp_query_id,reindex_method) 
-			VALUES (' . 
-				$host_id        . ',' . 
-				$data_query_id  . ',' . 
-				$reindex_method . ')');
-
-		/* recache snmp data */
-		run_data_query($host_id, $data_query_id);
-	}
-
-	if (is_error_message()) {
-		echo "ERROR: Failed to add this data query for host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
-		exit(1);
-	} else {
-		echo "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
-		exit;
-	}
+/*
+	* Now, add the data query and run it once to get the cache filled
+	*/
+$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
+if ((isset($exists_already)) &&
+	($exists_already > 0)) {
+	Cli::Exit(EXIT_BAD_QUERY_ASSOCIATION, array($host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]));
 } else {
-	display_help();
+	db_execute('REPLACE INTO host_snmp_query 
+		(host_id,snmp_query_id,reindex_method) 
+		VALUES (' . 
+			$host_id        . ',' . 
+			$data_query_id  . ',' . 
+			$reindex_method . ')');
+
+	/* recache snmp data */
+	run_data_query($host_id, $data_query_id);
+}
+
+if (is_error_message()) {
+	Cli::Exit(EXIT_BAD_QUERY_ADD, array($host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]));
+} else {
+	echo "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: " . $reindex_types[$reindex_method] . ")\n";
 	exit;
 }
 
