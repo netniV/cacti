@@ -3634,8 +3634,6 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
 function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '', $attachments = '', $headers = '', $html = true) {
 	global $config;
 
-	include_once($config['include_path'] . '/vendor/phpmailer/PHPMailerAutoload.php');
-
 	// Set the to information
 	if ($to == '') {
 		return __('Mailer Error: No <b>TO</b> address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting.');
@@ -3643,7 +3641,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 
 	/* perform data substitution */
 	if (strpos($subject, '|date_time|') !== false) {
-	    $date = read_config_option('date');
+		$date = read_config_option('date');
 		if (!empty($date)) {
 			$time = strtotime($date);
 		} else {
@@ -3669,70 +3667,6 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 	$body = str_replace('<TO>',      $toText, $body);
 	$body = str_replace('<FROM>',    $fromText, $body);
 
-	// Create the PHPMailer instance
-	$mail = new PHPMailer;
-
-	// Set a reasonable timeout of 5 seconds
-	$timeout = read_config_option('settings_smtp_timeout');
-	if (empty($timeout) || $timeout < 0 || $timeout > 300) {
-		$mail->Timeout = 5;
-	} else {
-		$mail->Timeout = $timeout;
-	}
-
-	// Set the subject
-	$mail->Subject = $subject;
-
-	// Support i18n
-	$mail->CharSet = 'UTF-8';
-	$mail->Encoding = 'base64';
-
-	$how = read_config_option('settings_how');
-	if ($how < 0 || $how > 2) {
-		$how = 0;
-	}
-
-	if ($how == 0) {
-		$mail->isMail();
-	} else if ($how == 1) {
-		$mail->Sendmail = read_config_option('settings_sendmail_path');
-		$mail->isSendmail();
-	} else if ($how == 2) {
-		$mail->isSMTP();
-		$mail->Host     = read_config_option('settings_smtp_host');
-		$mail->Port     = read_config_option('settings_smtp_port');
-
-		if (read_config_option('settings_smtp_username') != '') {
-			$mail->SMTPAuth = true;
-			$mail->Username = read_config_option('settings_smtp_username');
-
-			if (read_config_option('settings_smtp_password') != '') {
-				$mail->Password = read_config_option('settings_smtp_password');
-			}
-		} else {
-			$mail->SMTPAuth = false;
-		}
-
-		// Set a reasonable timeout of 5 seconds
-		$timeout = read_config_option('settings_smtp_timeout');
-		if (empty($timeout) || $timeout < 0 || $timeout > 300) {
-			$mail->Timeout = 10;
-		} else {
-			$mail->Timeout = $timeout;
-		}
-
-		$secure  = read_config_option('settings_smtp_secure');
-		if (!empty($secure) && $secure != 'none') {
-			$mail->SMTPSecure = true;
-			if (substr_count($mail->Host, ':') == 0) {
-				$mail->Host = $secure . '://' . $mail->Host;
-			}
-		} else {
-			$mail->SMTPAutoTLS = false;
-			$mail->SMTPSecure = false;
-		}
-	}
-
 	// Set the from information
 	if (!is_array($from)) {
 		$fromname = '';
@@ -3749,89 +3683,33 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 			}
 		}
 
-		$mail->setFrom($from, $fromname);
-	} else {
-		$mail->setFrom($from[0], $from[1]);
+		$from = array($form, $fromname);
 	}
 
-	if (!is_array($to)) {
-		$to = explode(',', $to);
+	$to = mailer_get_recipients($to);
+	$cc = mailer_get_recipients($cc);
+	$bcc = mailer_get_recipients($bcc);
+	$replyto = mailer_get_recipients($replyto);
 
-		foreach($to as $t) {
-			$t = trim($t);
-			if ($t != '') {
-				$mail->addAddress($t);
-			}
-		}
-	} else {
-		foreach($to as $email => $name) {
-			$mail->addAddress($email, $name);
-		}
+	$mailer_item_id = mailer_add_item($from, $to, $cc, $bcc, $replyto, $subject);
+	if (!$mailer_item_id) {
+		return __('Failed to add mailer item');
 	}
 
-	if (!is_array($cc)) {
-		if ($cc != '') {
-			$cc = explode(',', $cc);
-			foreach($cc as $c) {
-				$c = trim($c);
-				$mail->addCC($c);
-			}
-		}
-	} else {
-		foreach($cc as $email => $name) {
-			$mail->addCC($email, $name);
-		}
+	if (!mailer_add_headers($mailer_item_id, $headers)) {
+		return __('Failed to add mailer headers');
 	}
-
-	if (!is_array($bcc)) {
-		if ($bcc != '') {
-			$bcc = explode(',', $bcc);
-			foreach($bcc as $bc) {
-				$bc = trim($bc);
-				$mail->addBCC($bc);
-			}
-		}
-	} else {
-		foreach($bcc as $email => $name) {
-			$mail->addBCC($email, $name);
-		}
-	}
-
-	if (!is_array($replyto)) {
-		if ($replyto != '') {
-			$mail->addReplyTo($replyto);
-		}
-	} else {
-		$mail->addReplyTo($replyto[0], $replyto[1]);
-	}
-
-	// Set the wordwrap limits
-	$wordwrap = read_config_option('settings_wordwrap');
-	if ($wordwrap == '') {
-		$wordwrap = 76;
-	} elseif ($wordwrap > 9999) {
-		$wordwrap = 9999;
-	} elseif ($wordwrap < 0) {
-		$wordwrap = 76;
-	}
-
-	$mail->WordWrap = $wordwrap;
-	$mail->setWordWrap();
-
-	$i = 0;
 
 	// Handle Graph Attachments
+	$i = 0;
 	if (is_array($attachments) && sizeof($attachments) && substr_count($body, '<GRAPH>') > 0) {
 		foreach($attachments as $attachment) {
 			if ($attachment['attachment'] != '') {
 				/* get content id and create attachment */
 				$cid = getmypid() . '_' . $i . '@' . 'localhost';
 
-				/* attempt to attach */
-				if ($mail->addStringEmbeddedImage($attachment['attachment'], $cid, $attachment['filename'], 'base64', $attachment['mime_type'], $attachment['inline']) === false) {
-					cacti_log('ERROR: ' . $mail->ErrorInfo, false);
-
-					return $mail->ErrorInfo;
+				if (!mailer_add_attachment($mailer_item_id, $cid, $attachment)) {
+					return __('Failed to add mailer attachment');
 				}
 
 				$body = str_replace('<GRAPH>', "<br><br><img src='cid:$cid'>", $body);
@@ -3847,11 +3725,8 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 				/* get content id and create attachment */
 				$cid = getmypid() . '_' . $i . '@' . 'localhost';
 
-				/* attempt to attach */
-				if ($mail->addStringEmbeddedImage($attachment['attachment'], $cid, $attachment['filename'], 'base64', $attachment['mime_type'], $attachment['inline']) === false) {
-					cacti_log('ERROR: ' . $mail->ErrorInfo, false);
-
-					return $mail->ErrorInfo;
+				if (!mailer_add_attachment($mailer_item_id, $cid, $attachment)) {
+					return __('Failed to add mailer attachment');
 				}
 
 				/* handle the body text */
@@ -3871,21 +3746,12 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 		}
 	}
 
-	/* process custom headers */
-	if (is_array($headers) && sizeof($headers)) {
-		foreach($headers as $name => $value) {
-			$mail->addCustomHeader($name, $value);
-		}
-	}
-
 	// Set both html and non-html bodies
 	$text = array('text' => '', 'html' => '');
 	if ($body_text != '' && $html == true) {
 		$text['html']  = $body . '<br>';
 		$text['text']  = $body_text;
-		$mail->isHTML(true);
-		$mail->Body    = $text['html'];
-		$mail->AltBody = $text['text'];
+		$text['isHTML'] = true;
 	} elseif ($attachments == '' && $html == false) {
 		if ($body_text != '') {
 			$body = $body_text;
@@ -3896,31 +3762,133 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 		}
 
 		$text['text']  = strip_tags($body);
-		$mail->isHTML(false);
-		$mail->Body    = $text['text'];
+		$text['isHTML'] = false;
 	} elseif ($html == false) {
 		$text['text']  = strip_tags($body);
-		$mail->isHTML(false);
-		$mail->Body    = $text['text'];
+		$text['isHTML'] = false;
 	} else {
 		$text['html']  = $body . '<br>';
 		$text['text']  = strip_tags(str_replace('<br>', "\n", $body));
-		$mail->isHTML(true);
-		$mail->Body    = $text['html'];
-		$mail->AltBody = $text['text'];
+		$text['isHTML'] = true;
 	}
 
-	if ($mail->send()) {
-		cacti_log("Mail Successfully Sent to '" . $toText . "', Subject: '" . $mail->Subject . "'", false, 'MAILER');
+	if (!mailer_submit($mailer_item_id, $text['isHTML'], $text['text'], $text['html'])) {
+		return __('Failed to add mailer body');
+	}
 
-		return '';
-	} else {
-		cacti_log("Mail Failed to '" . $toText . "', Subject: '" . $mail->Subject . "'", false, 'MAILER');
+	return '';
+}
 
-		return $mail->ErrorInfo;
+function mailer_submit($mailer_item_id, $isHTML, $text, $html) {
+	$text_id = '';
+	if (strlen($text)) {
+		$text_id = mailer_add_data($mailer_item_id, $text);
+		if ($text_id === false) {
+			return __("Failed to add mailer text entry");
+		}
+	}
+
+	$html_id = '';
+	if (strlen($html)) {
+		$html_id = mailer_add_data($mailer_item_id, $html);
+		if ($html_id === false) {
+			return __("Failed to add mailer text entry");
+		}
+	}
+
+	db_execute_prepared('UPDATE mailer_item SET body_text_id = ?, body_html_id = ?, body_is_html = ?, status = 1',
+		array($text_id, $html_id, $ishtml));
+}
+
+function mailer_add_header($mailer_item_id, $headers) {
+	/* process custom headers */
+	if (is_array($headers) && sizeof($headers)) {
+		foreach($headers as $name => $value) {
+			$mailer_data_id = mailer_add_data($mailer_item_id, $value);
+			if ($mailer_data_id === false) {
+				return false;
+			}
+
+			db_execute_prepared('INSERT INTO mailer_header (mailer_item_id, mailer_data_id, name)
+				VALUES (?, ?, ?)',
+				array($mailer_item_id, $mailer_data_id, $name));
+		}
+	}
+	return true;
+}
+
+function mailer_add_attachment($mailer_item_id, $cid, $attachment) {
+	$mailer_data_id = mailer_add_data($mailer_item_Id, $attachment['attachment']);
+	if ($mailer_data_id === false) {
+		return false;
+	}
+
+	db_execute_prepared('INSERT INTO mailer_attachment (mailer_item_id, mailer_data_id, filename, mime_type, inline, cid)
+		VALUES (?, ?, ?, ?, ?, ?)',
+		array($mailer_item_id, $mailer_data_id, $attachment['filename'], $attachment['mime_type'], $attachment['inline'], $cid));
+
+	return true;
+}
+
+function mailer_add_data($mailer_item_id, $data) {
+	db_execute_prepared('INSERT INTO mailer_data (mailer_item_id, data)
+		VALUES (?, ?, ?, ?, ?)',
+		array($mailer_item_id, $data_type, $name, $value));
+
+	return db_fetch_insert_id();
+}
+
+function mailer_add_item($from, $to, $cc, $bcc, $replyto, $subject) {
+	db_execute_prepared('INSERT INTO mailer_item (subject, retries, last_retry, last_error, status)
+		VALUES (?, 0, null, \'\', 0)',
+		array($subject));
+
+	$mailer_item_id = db_fetch_insert_id();
+
+	mailer_add_recipients($mailer_item_id, $from, MAILER_RECIPIENT_FROM);
+	mailer_add_recipients($mailer_item_id, $to, MAILER_RECIPIENT_TO);
+	mailer_add_recipients($mailer_item_id, $cc, MAILER_RECIPIENT_CC);
+	mailer_add_recipients($mailer_item_id, $bcc, MAILER_RECIPIENT_BCC);
+	mailer_add_recipients($mailer_item_id, $replyto, MAILER_RECIPIENT_REPLYTO);
+}
+
+function mailer_add_recipient($mailer_item_id, $recipients, $email_type) {
+	foreach ($recipients as $recipient) {
+		foreach ($recipient as $email => $name) {
+			db_execute_prepared('INSERT INTO mailer_recipient (mailer_item_id, email_type, email, name)
+				VALUES (?, ?, ?, ?)',
+				array($mailer_item_id, $email_type, $email, $name));
+		}
 	}
 }
 
+function mailer_get_recipients($recipients) {
+	$return_array = array();
+	if ($recipients != '') {
+		if (!is_array($recipients)) {
+			$temp_to = explode(',', $recipients);
+			foreach ($temp_to as $t) {
+				$t = trim($t);
+				if ($t != '') {
+					$return_array[$t] = $t;
+				}
+			}
+		} else {
+			foreach ($recipients as $email => $name) {
+				$email = trim($email);
+				$name = trim($name);
+				if ($email != '') {
+					if (!strlen($name)) {
+						$name = $email;
+					}
+					$return_array[$email] = $name;
+				}
+			}
+		}
+	}
+
+	return $return_array();
+}
 function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure = 'none') {
 	global $config;
 
