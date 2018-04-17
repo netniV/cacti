@@ -111,6 +111,7 @@ $cacti_version_codes = array(
 	'1.1.35' => '0101',
 	'1.1.36' => '0101',
 	'1.1.37' => '0101',
+	'1.1.38' => '0101',
 );
 
 $messages = array(
@@ -216,8 +217,17 @@ $messages = array(
 	35 => array(
 		'message' => __('Some settings not saved. Check messages below.  Check red fields for errors.'),
 		'type' => 'error'),
-	36  => array(
+	36 => array(
 		'message' => __('The file highlighted does not exist.  Please enter a valid file name.'),
+		'type' => 'error'),
+	37 => array(
+		'message' => __('All User Settings have been returned to their default values.'),
+		'type' => 'info'),
+	38 => array(
+		'message' => __('Suggested Field Name was not entered.  Please enter a field name and try again.'),
+		'type' => 'error'),
+	39 => array(
+		'message' => __('Suggested Value was not entered.  Please enter a suggested value and try again.'),
 		'type' => 'error'),
 	'clog_invalid' => array(
 		'message' => __('Log file specified is not a Cacti log or archive file.'),
