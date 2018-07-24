@@ -10,6 +10,14 @@ function themeReady() {
 	$('#navigation').css('height', ($(window).height()-40)+'px');
 	$('#navigation_right').css('height', ($(window).height()-40)+'px');
 
+	// Terminate any previous livequery's, then re-install them
+	$('.table-alt:visible').expire();
+	$('body').livequery('.table-alt:visible', null, function() {
+		$('.table-alt:visible').addClass('table-alt-visible');
+	}, function() {
+		$('.table-alt:hidden').removeClass('table-alt-visible');
+	});
+
 	keepWindowSize();
 
 	// Setup the navigation menu

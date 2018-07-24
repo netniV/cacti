@@ -2374,3 +2374,14 @@ tr#realtime td:first-child {
 	display: none;
 }
 
+.table-alt .table-alt-visible:nth-child(even) {
+	background: none repeat scroll 0 0 #E5E5E5;
+	border: none;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.table-alt .table-alt-visible:nth-child(odd) {
+	background: none repeat scroll 0 0 #F5F5F5;
+	border: none;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}

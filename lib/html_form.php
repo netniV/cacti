@@ -47,7 +47,8 @@ function draw_edit_form($array) {
 		}
 
 		$i = 0;
-		$row_class = 'odd';
+		//$row_class = 'odd';
+		$row_class = 'table-alt';
 
 		foreach ($fields_array as $field_name => $field_array) {
 			if ($field_array['method'] == 'hidden') {
@@ -68,11 +69,13 @@ function draw_edit_form($array) {
 					print "<div id='row_$field_name' class='formRow even-alternate $row_class'>";
 				} else {
 					print "<div id='row_$field_name' class='formRow $row_class'>";
+/*
 					if ($row_class == 'even') {
 						$row_class = 'odd';
 					} else {
 						$row_class = 'even';
 					}
+ */
 				}
 
 				// Make a form cell
