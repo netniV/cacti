@@ -11,11 +11,38 @@ function themeReady() {
 	$('#navigation_right').css('height', ($(window).height()-40)+'px');
 
 	// Terminate any previous livequery's, then re-install them
-	$('.table-alt:visible').expire();
-	$('body').livequery('.table-alt:visible', null, function() {
-		$('.table-alt:visible').addClass('table-alt-visible');
+	var isAlreadyColoring = false;
+	var themeTableRowsTimer = null;
+	var themeTableRowsFunction = function() {
+		$(".cactiTable").each(function() {
+			var altColor = 'odd';
+			$(this).children('.formRow:visible, .tableRow:visible').each(function() {
+				$(this).removeClass('even').removeClass('odd').addClass(altColor);
+				if (altColor == 'odd') {
+					altColor = 'even';
+				} else {
+					altColor = 'odd';
+				}
+			});
+		});
+	};
+
+	$(this).livequery('.formRow:visible, .tableRow:visible', null, function() {
+		var cleared = false;
+		if (themeTableRowsTimer != null) {
+			window.clearTimeout(themeTableRowsTimer);
+			cleared = true;
+		}
+		console.log('Row: Visible, Cleared: ' + cleared);
+		themeTableRowsTimer = window.setTimeout(themeTableRowsFunction, 50);
 	}, function() {
-		$('.table-alt:hidden').removeClass('table-alt-visible');
+		var cleared = false;
+		if (themeTableRowsTimer != null) {
+			window.clearTimeout(themeTableRowsTimer);
+			cleared = true;
+		}
+		console.log('Row: Hidden,  Cleared: ' + cleared);
+		themeTableRowsTimer = window.setTimeout(themeTableRowsFunction, 50);
 	});
 
 	keepWindowSize();

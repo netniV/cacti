@@ -100,7 +100,6 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
 function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id = '') {
-/*
 	if ($row_value % 2 == 1) {
 			$class='odd';
 			$current_color = $row_color1;
@@ -112,8 +111,7 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id 
 		}
 		$current_color = $row_color1;
 	}
-*/
-	$class='table-alt';
+
 	if ($row_id != '') {
 		print "<tr class='$class selectable tableRow' id='$row_id'>\n";
 	} else {
@@ -130,7 +128,6 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id 
 function form_alternate_row($row_id = '', $light = false, $disabled = false) {
 	static $i = 1;
 
-/*
 	if ($i % 2 == 1) {
 		$class = 'odd';
 	} elseif ($light) {
@@ -138,8 +135,7 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false) {
 	} else {
 		$class = 'even';
 	}
-*/
-	$class='table-alt';
+
 	$i++;
 
 	if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
