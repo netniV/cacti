@@ -165,7 +165,7 @@ function aggregate_color_form_save() {
 		}
 	}
 
-	header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . (empty($color_template_id) ? get_nfilter_request_var('color_template_id') : $color_template_id));
+	header('Location: color_templates.php?action=template_edit&color_template_id=' . (empty($color_template_id) ? get_nfilter_request_var('color_template_id') : $color_template_id));
 }
 
 /* ------------------------
@@ -201,7 +201,7 @@ function aggregate_color_form_actions() {
 			}
 		}
 
-		header('Location: color_templates.php?header=false');
+		header('Location: color_templates.php');
 		exit;
 	}
 
@@ -265,7 +265,7 @@ function aggregate_color_form_actions() {
 		}
 	} else {
 		raise_message(40);
-		header('Location: color_templates.php?header=false');
+		header('Location: color_templates.php');
 		exit;
 	}
 
@@ -679,12 +679,11 @@ function aggregate_color_template() {
 		strURL += '?rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&has_graphs=' + $('#has_graphs').is(':checked');
-		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
 
 	function clearFilter() {
-		strURL = 'color_templates.php?clear=1&header=false';
+		strURL = 'color_templates.php?clear=1';
 		loadPageNoHeader(strURL);
 	}
 

@@ -103,9 +103,9 @@ function form_save() {
 		}
 
 		if (is_error_message()) {
-			header('Location: color.php?header=false&action=edit&id=' . (empty($color_id) ? get_nfilter_request_var('id') : $color_id));
+			header('Location: color.php?action=edit&id=' . (empty($color_id) ? get_nfilter_request_var('id') : $color_id));
 		} else {
-			header('Location: color.php?header=false');
+			header('Location: color.php');
 		}
 	} elseif (isset_request_var('save_component_import')) {
 		if (isset($_FILES['import_file']['tmp_name'])) {
@@ -150,7 +150,7 @@ function form_actions() {
 			}
 		}
 
-		header('Location: color.php?header=false');
+		header('Location: color.php');
 		exit;
 	}
 
@@ -193,7 +193,7 @@ function form_actions() {
 		}
 	} else {
 		raise_message(40);
-		header('Location: color.php?header=false');
+		header('Location: color.php');
 		exit;
 	}
 
@@ -575,8 +575,8 @@ function color() {
 			</form>
 			<script type='text/javascript'>
 			function applyFilter() {
-				strURL  = 'color.php?header=false';
-				strURL += '&filter='+$('#filter').val();
+				strURL  = 'color.php';
+				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_graphs='+$('#has_graphs').is(':checked');
 				strURL += '&named='+$('#named').is(':checked');
@@ -584,7 +584,7 @@ function color() {
 			}
 
 			function clearFilter() {
-				strURL = 'color.php?clear=1&header=false';
+				strURL = 'color.php?clear=1';
 				loadPageNoHeader(strURL);
 			}
 
@@ -611,12 +611,12 @@ function color() {
 				});
 
 				$('#import').click(function(event) {
-					strURL = 'color.php?action=import&header=false';
+					strURL = 'color.php?action=import';
 					loadPageNoHeader(strURL);
 				});
 
 				$('#export').click(function(event) {
-					strURL = 'color.php?action=export&header=false';
+					strURL = 'color.php?action=export';
 					document.location = strURL;
 				});
 			});

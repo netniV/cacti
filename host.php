@@ -63,7 +63,7 @@ switch (get_request_var('action')) {
 	case 'reindex':
 		host_reindex();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'actions':
@@ -75,7 +75,7 @@ switch (get_request_var('action')) {
 
 		host_add_gt();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'gt_remove':
@@ -83,7 +83,7 @@ switch (get_request_var('action')) {
 
 		host_remove_gt();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'query_add':
@@ -91,7 +91,7 @@ switch (get_request_var('action')) {
 
 		host_add_query();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'query_remove':
@@ -99,7 +99,7 @@ switch (get_request_var('action')) {
 
 		host_remove_query();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'query_change':
@@ -107,7 +107,7 @@ switch (get_request_var('action')) {
 
 		host_change_query();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'query_reload':
@@ -115,14 +115,14 @@ switch (get_request_var('action')) {
 
 		host_reload_query();
 
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 		break;
 	case 'query_verbose':
 		get_filter_request_var('host_id');
 
 		host_reload_query();
 
-		header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true':'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
 		break;
 	case 'edit':
 		top_header();
@@ -139,12 +139,12 @@ switch (get_request_var('action')) {
 		break;
 	case 'enable_debug':
 		enable_device_debug(get_filter_request_var('host_id'));
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'disable_debug':
 		disable_device_debug(get_filter_request_var('host_id'));
-		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
+		header('Location: host.php?action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'ajax_locations':
@@ -257,7 +257,7 @@ function form_save() {
 			}
 		}
 
-		header('Location: host.php?header=false&action=edit&id=' . (empty($host_id) ? get_nfilter_request_var('id') : $host_id));
+		header('Location: host.php?action=edit&id=' . (empty($host_id) ? get_nfilter_request_var('id') : $host_id));
 	}
 }
 
@@ -319,7 +319,7 @@ function form_actions() {
 
 		api_plugin_hook_function('device_action_bottom', array(get_nfilter_request_var('drp_action'), $selected_items));
 
-		header('Location: host.php?header=false');
+		header('Location: host.php');
 		exit;
 	}
 
@@ -488,7 +488,7 @@ function form_actions() {
 		}
 	} else {
 		raise_message(40);
-		header('Location: host.php?header=false');
+		header('Location: host.php');
 		exit;
 	}
 
@@ -1243,7 +1243,7 @@ function device_javascript() {
 			});
 
 		$('input[id^="reindex_"]').change(function() {
-			strURL  = urlPath+'host.php?action=query_change&header=false';
+			strURL  = urlPath+'host.php?action=query_change';
 			strURL += '&host_id='+$(this).attr('data-device-id');
 			strURL += '&data_query_id='+$(this).attr('data-query-id');
 			strURL += '&reindex_method='+$(this).attr('data-reindex-method');
@@ -1435,12 +1435,11 @@ function host() {
 		strURL += '&location=' + $('#location').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
 
 	function clearFilter() {
-		strURL = 'host.php?clear=1&header=false';
+		strURL = 'host.php?clear=1';
 		loadPageNoHeader(strURL);
 	}
 

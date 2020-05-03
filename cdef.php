@@ -144,7 +144,7 @@ function form_save() {
 			}
 		}
 
-		header('Location: cdef.php?header=false&action=edit&id=' . (empty($cdef_id) ? get_nfilter_request_var('id') : $cdef_id));
+		header('Location: cdef.php?action=edit&id=' . (empty($cdef_id) ? get_nfilter_request_var('id') : $cdef_id));
 	} elseif (isset_request_var('save_component_item')) {
 		/* ================= input validation ================= */
 		get_filter_request_var('id');
@@ -172,9 +172,9 @@ function form_save() {
 		}
 
 		if (is_error_message()) {
-			header('Location: cdef.php?header=false&action=item_edit&cdef_id=' . get_nfilter_request_var('cdef_id') . '&id=' . (empty($cdef_item_id) ? get_nfilter_request_var('id') : $cdef_item_id));
+			header('Location: cdef.php?action=item_edit&cdef_id=' . get_nfilter_request_var('cdef_id') . '&id=' . (empty($cdef_item_id) ? get_nfilter_request_var('id') : $cdef_item_id));
 		} else {
-			header('Location: cdef.php?header=false&action=edit&id=' . get_nfilter_request_var('cdef_id'));
+			header('Location: cdef.php?action=edit&id=' . get_nfilter_request_var('cdef_id'));
 		}
 	}
 }
@@ -243,7 +243,7 @@ function form_actions() {
 			}
 		}
 
-		header('Location: cdef.php?header=false');
+		header('Location: cdef.php');
 		exit;
 	}
 
@@ -294,7 +294,7 @@ function form_actions() {
 		}
 	} else {
 		raise_message(40);
-		header('Location: cdef.php?header=false');
+		header('Location: cdef.php');
 		exit;
 	}
 
@@ -367,7 +367,7 @@ function cdef_item_remove_confirm() {
 			}, function(data) {
 				$('#cdialog').dialog('close');
 				$('.deleteMarker').blur();
-				loadPageNoHeader('cdef.php?action=edit&header=false&id=<?php print get_request_var('id');?>');
+				loadPageNoHeader('cdef.php?action=edit&id=<?php print get_request_var('id');?>');
 			});
 		});
 	});
@@ -529,7 +529,6 @@ function item_edit() {
 			strURL += '&id=' + $('#id').val();
 			strURL += '&cdef_id=' + $('#cdef_id').val();
 			strURL += '&type_select=' + $('#type_select').val();
-			strURL += '&header=false';
 			loadPageNoHeader(strURL);
 		});
 	});
@@ -571,7 +570,7 @@ function cdef_item_dnd() {
 		}
 	}
 
-	header('Location: cdef.php?action=edit&header=false&id=' . get_request_var('id'));
+	header('Location: cdef.php?action=edit&id=' . get_request_var('id'));
 }
 
 function cdef_edit() {
@@ -791,15 +790,15 @@ function cdef() {
 			<script type='text/javascript'>
 
 			function applyFilter() {
-				strURL  = 'cdef.php?header=false';
-				strURL += '&filter='+$('#filter').val();
+				strURL  = 'cdef.php';
+				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_graphs='+$('#has_graphs').is(':checked');
 				loadPageNoHeader(strURL);
 			}
 
 			function clearFilter() {
-				strURL = 'cdef.php?clear=1&header=false';
+				strURL = 'cdef.php?clear=1';
 				loadPageNoHeader(strURL);
 			}
 

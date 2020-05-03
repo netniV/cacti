@@ -92,7 +92,7 @@ switch (get_request_var('action')) {
 		if ($debug_status == 'waiting' || $debug_status == 'analysis') {
 			$refresh = array(
 				'seconds' => 30,
-				'page'    => 'data_debug.php?action=view&id=' . $id . '&header=false',
+				'page'    => 'data_debug.php?action=view&id=' . $id,
 				'logout'  => 'false'
 			);
 
@@ -127,7 +127,7 @@ switch (get_request_var('action')) {
 
 		$refresh = array(
 			'seconds' => get_request_var('refresh'),
-			'page'    => 'data_debug.php?header=false',
+			'page'    => 'data_debug.php',
 			'logout'  => 'false'
 		);
 
@@ -181,10 +181,10 @@ function form_actions() {
 		if (isset_request_var('save_list')) {
 			if (get_request_var('drp_action') == '2') { /* delete */
 				debug_delete($selected_items);
-				header('Location: data_debug.php?header=false&debug=-1');
+				header('Location: data_debug.php?debug=-1');
 			} elseif (get_request_var('drp_action') == '1') { /* Rerun */
 				debug_rerun($selected_items);
-				header('Location: data_debug.php?header=false&debug=1');
+				header('Location: data_debug.php?debug=1');
 			}
 
 			exit;
@@ -1082,18 +1082,17 @@ function data_debug_filter() {
 				'&refresh=' + $('#refresh').val() +
 				'&profile=' + $('#profile').val() +
 				'&debug=' + $('#debug').val() +
-				'&template_id=' + $('#template_id').val() +
-				'&header=false';
+				'&template_id=' + $('#template_id').val();
 			loadPageNoHeader(strURL);
 		}
 
 		function clearFilter() {
-			strURL = 'data_debug.php?clear=1&header=false';
+			strURL = 'data_debug.php?clear=1';
 			loadPageNoHeader(strURL);
 		}
 
 		function purgeFilter() {
-			strURL = 'data_debug.php?purge=1&debug=-1&header=false';
+			strURL = 'data_debug.php?purge=1&debug=-1';
 			loadPageNoHeader(strURL);
 		}
 

@@ -74,7 +74,7 @@ switch (get_request_var('action')) {
 
 		automation_snmp_item_remove();
 
-		header('Location: automation_snmp.php?header=false&action=edit&header=false&id=' . get_request_var('id'));
+		header('Location: automation_snmp.php?action=edit&id=' . get_request_var('id'));
 		break;
 	case 'item_edit':
 		top_header();
@@ -118,7 +118,7 @@ function form_automation_snmp_save() {
 			}
 		}
 
-		header('Location: automation_snmp.php?header=false&action=edit&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
+		header('Location: automation_snmp.php?action=edit&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
 	} elseif (isset_request_var('save_component_automation_snmp_item')) {
 		/* ================= input validation ================= */
 		get_filter_request_var('item_id');
@@ -154,13 +154,13 @@ function form_automation_snmp_save() {
 		}
 
 		if (is_error_message()) {
-			header('Location: automation_snmp.php?header=false&action=item_edit&id=' . get_nfilter_request_var('id') . '&item_id=' . (empty($item_id) ? get_filter_request_var('id') : $item_id));
+			header('Location: automation_snmp.php?action=item_edit&id=' . get_nfilter_request_var('id') . '&item_id=' . (empty($item_id) ? get_filter_request_var('id') : $item_id));
 		} else {
-			header('Location: automation_snmp.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
+			header('Location: automation_snmp.php?action=edit&id=' . get_nfilter_request_var('id'));
 		}
 	} else {
 		raise_message(2);
-		header('Location: automation_snmp.php?header=false');
+		header('Location: automation_snmp.php');
 	}
 }
 
@@ -190,7 +190,7 @@ function form_automation_snmp_actions() {
 			}
 		}
 
-		header('Location: automation_snmp.php?header=false');
+		header('Location: automation_snmp.php');
 		exit;
 	}
 
@@ -224,7 +224,7 @@ function form_automation_snmp_actions() {
 
 	if (!isset($automation_array)) {
 		raise_message(40);
-		header('Location: automation_snmp.php?header=false');
+		header('Location: automation_snmp.php');
 		exit;
 	} else {
 		$save_html = "<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' name='save'>";
@@ -290,7 +290,7 @@ function automation_snmp_item_dnd() {
 		}
     }
 
-    header('Location: automation_snmp.php?action=edit&header=false&id=' . get_request_var('id'));
+    header('Location: automation_snmp.php?action=edit&id=' . get_request_var('id'));
 	exit;
 }
 
@@ -356,7 +356,7 @@ function automation_snmp_item_remove_confirm() {
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
-				loadPageNoHeader('automation_snmp.php?action=edit&header=false&id=<?php print get_request_var('id');?>');
+				loadPageNoHeader('automation_snmp.php?action=edit&id=<?php print get_request_var('id');?>');
 			});
 		});
     });
@@ -689,14 +689,14 @@ function automation_snmp() {
 	</tr>
 	<script type='text/javascript'>
 	function applyFilter() {
-		strURL  = 'automation_snmp.php?header=false';
-		strURL += '&filter='+$('#filter').val();
+		strURL  = 'automation_snmp.php';
+		strURL += '?filter='+$('#filter').val();
 		strURL += '&rows='+$('#rows').val();
 		loadPageNoHeader(strURL);
 	}
 
 	function clearFilter() {
-		strURL = 'automation_snmp.php?clear=1&header=false';
+		strURL = 'automation_snmp.php?clear=1';
 		loadPageNoHeader(strURL);
 	}
 
@@ -805,7 +805,7 @@ function automation_snmp() {
 	?>
 	<script type='text/javascript'>
 	function applyFilter() {
-		strURL  = 'automation_snmp.php?header=false&rows=' + $('#rows').val();
+		strURL  = 'automation_snmp.php?rows=' + $('#rows').val();
 		strURL += strURL + '&filter=' + $('#filter').val();
 		loadPageNoHeader(strURL);
 	}

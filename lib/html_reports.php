@@ -142,7 +142,7 @@ function reports_form_save() {
 			}
 		}
 
-		header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
+		header('Location: ' . get_reports_page() . '?action=edit&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
 		exit;
 	} elseif (isset_request_var('save_component_report_item')) {
 		/* ================= input validation ================= */
@@ -179,9 +179,9 @@ function reports_form_save() {
 			}
 		}
 
-		header('Location: ' . get_reports_page() . '?action=item_edit&header=false&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
+		header('Location: ' . get_reports_page() . '?action=item_edit&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
 	} else {
-		header('Location: ' . get_reports_page() . '?header=false');
+		header('Location: ' . get_reports_page());
 	}
 	exit;
 }
@@ -249,7 +249,7 @@ function reports_form_actions() {
 
 		force_session_data();
 
-		header('Location: ' . get_reports_page() . '?header=false');
+		header('Location: ' . get_reports_page());
 		exit;
 	}
 
@@ -278,7 +278,7 @@ function reports_form_actions() {
 
 	if (!isset($reports_array)) {
 		raise_message(40);
-		header('Location: ' . get_reports_page() . '?header=false');
+		header('Location: ' . get_reports_page());
 		exit;
 	} else {
 		$save_html = "<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' name='save'>";
@@ -853,7 +853,7 @@ function reports_item_edit() {
 	}
 
 	function applyChange() {
-		strURL  = '?action=item_edit&header=false'
+		strURL  = '?action=item_edit'
 		strURL += '&id=' + $('#report_id').val();
 		strURL += '&item_id=' + $('#id').val();
 		strURL += '&item_type=' + $('#item_type').val();
@@ -1660,14 +1660,14 @@ function reports() {
 	?>
 	<script type='text/javascript'>
 	function applyFilter() {
-		strURL  = '<?php print get_reports_page();?>?header=false&status=' + $('#status').val();
+		strURL  = '<?php print get_reports_page();?>?status=' + $('#status').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		loadPageNoHeader(strURL);
 	}
 
 	function clearFilter() {
-		strURL = '<?php print get_reports_page();?>?header=false&clear=1';
+		strURL = '<?php print get_reports_page();?>?clear=1';
 		loadPageNoHeader(strURL);
 	}
 

@@ -193,7 +193,7 @@ function clog_view_logfile() {
 
 	$page_nr = get_request_var('page');
 
-	$page = $config['url_path'] . 'clog' . (!$clogAdmin ? '_user' : '') . '.php?header=false';
+	$page = $config['url_path'] . 'clog' . (!$clogAdmin ? '_user' : '') . '.php';
 	$page .= '&filename=' . basename($logfile) . '&page=' . $page_nr;
 
 	$refresh = array(
@@ -222,12 +222,12 @@ function clog_view_logfile() {
 				<input type='button' class='ui-button ui-corner-all ui-widget' id='pc' name='purge_continue' value='" . __esc('Continue') . "' title='" . __esc('Purge Log') . "'>
 				<script type='text/javascript'>
 				$('#pc').click(function() {
-					strURL = location.pathname+'?purge_continue=1&header=false&filename=" . basename($logfile) . "';
+					strURL = location.pathname+'?purge_continue=1&filename=" . basename($logfile) . "';
 					loadPageNoHeader(strURL);
 				});
 
 				$('#cancel').click(function() {
-					strURL = location.pathname+'?header=false';
+					strURL = location.pathname;
 					loadPageNoHeader(strURL);
 				});
 
@@ -614,7 +614,7 @@ function filter($clogAdmin, $selectedFile) {
 		});
 
 		$('#purge').click(function() {
-			strURL = basename(location.pathname) + '?purge=1&header=false&filename=' + $('#filename').val();
+			strURL = basename(location.pathname) + '?purge=1&filename=' + $('#filename').val();
 			loadPageNoHeader(strURL);
 		});
 
@@ -624,7 +624,7 @@ function filter($clogAdmin, $selectedFile) {
 		});
 
 		function clearFilter() {
-			strURL = basename(location.pathname) + '?clear=1&header=false&nostate=true';
+			strURL = basename(location.pathname) + '?clear=1&nostate=true';
 			loadPageNoHeader(strURL);
 		}
 
@@ -637,8 +637,7 @@ function filter($clogAdmin, $selectedFile) {
 				'&refresh='+$('#refresh').val()+
 				'&message_type='+$('#message_type').val()+
 				'&tail_lines='+$('#tail_lines').val()+
-				'&filename='+$('#filename').val()+
-				'&header=false';
+				'&filename='+$('#filename').val();
 
 			loadPageNoHeader(strURL);
 		}

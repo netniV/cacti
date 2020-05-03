@@ -96,13 +96,13 @@ switch (get_request_var('action')) {
 	case 'sortasc':
 		api_tree_sort_name_asc();
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 
 		break;
 	case 'sortdesc':
 		api_tree_sort_name_desc();
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 
 		break;
 	case 'edit':
@@ -151,7 +151,7 @@ switch (get_request_var('action')) {
 		$tree_id = get_filter_request_var('id');
 		api_tree_up($tree_id);
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 		exit;
 
 		break;
@@ -159,7 +159,7 @@ switch (get_request_var('action')) {
 		$tree_id = get_filter_request_var('id');
 		api_tree_down($tree_id);
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 		exit;
 
 		break;
@@ -169,20 +169,20 @@ switch (get_request_var('action')) {
 			api_tree_dnd($tree_ids);
 		}
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 		exit;
 
 		break;
 	case 'lock':
 		api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
 
-		header('Location: tree.php?action=edit&header=false&id=' . get_request_var('id'));
+		header('Location: tree.php?action=edit&id=' . get_request_var('id'));
 
 		break;
 	case 'unlock':
 		api_tree_unlock(get_request_var('id'), $_SESSION['sess_user_id']);
 
-		header('Location: tree.php?action=edit&header=false&id=' . get_request_var('id'));
+		header('Location: tree.php?action=edit&id=' . get_request_var('id'));
 
 		break;
 	case 'copy_node':
@@ -272,7 +272,7 @@ function form_save() {
 			}
 		}
 
-		header("Location: tree.php?header=false&action=edit&id=$tree_id");
+		header("Location: tree.php?action=edit&id=$tree_id");
 		exit;
 	}
 }
@@ -303,7 +303,7 @@ function form_actions() {
 			}
 		}
 
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 		exit;
 	}
 
@@ -370,7 +370,7 @@ function form_actions() {
 		}
 	} else {
 		raise_message(40);
-		header('Location: tree.php?header=false');
+		header('Location: tree.php');
 		exit;
 	}
 
@@ -1542,12 +1542,11 @@ function tree() {
 	function applyFilter() {
 		strURL  = 'tree.php?rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
 
 	function clearFilter() {
-		strURL = 'tree.php?clear=1&header=false';
+		strURL = 'tree.php?clear=1';
 		loadPageNoHeader(strURL);
 	}
 
