@@ -710,12 +710,12 @@ function aggregate_template() {
 		strURL += '?rows=' + $('#rows').val();
 		strURL += '&has_graphs=' + $('#has_graphs').is(':checked');
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'aggregate_templates.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

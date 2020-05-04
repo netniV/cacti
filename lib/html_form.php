@@ -1398,11 +1398,11 @@ function form_end($ajax = true) {
 						$('#messageContainer').remove();
 
 						if (type == 'noheader') {
-							loadPageNoHeader(href, scroll_or_id, true);
+							loadUrl({url:href, scroll:scroll_or_id, force:true})
 						} else if (type == 'toptab') {
-							loadTopTab(href, scroll_or_id, true);
+							loadUrl({url:href, scroll:scroll_or_id, force:true, loadType:'toptab'});
 						} else {
-							loadPage(href, true);
+							loadUrl({url:href, force:true});
 						}
 					}
 				}

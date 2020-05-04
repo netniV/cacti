@@ -281,12 +281,12 @@ function pages() {
 	function applyFilter() {
 		strURL  = 'links.php?rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL  = 'links.php?clear=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

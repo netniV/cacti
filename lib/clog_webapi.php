@@ -223,12 +223,12 @@ function clog_view_logfile() {
 				<script type='text/javascript'>
 				$('#pc').click(function() {
 					strURL = location.pathname+'?purge_continue=1&filename=" . basename($logfile) . "';
-					loadPageNoHeader(strURL);
+					loadUrl({url:strURL})
 				});
 
 				$('#cancel').click(function() {
 					strURL = location.pathname;
-					loadPageNoHeader(strURL);
+					loadUrl({url:strURL})
 				});
 
 				$(function() {
@@ -615,7 +615,7 @@ function filter($clogAdmin, $selectedFile) {
 
 		$('#purge').click(function() {
 			strURL = basename(location.pathname) + '?purge=1&filename=' + $('#filename').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		});
 
 		$('#logfile').submit(function(event) {
@@ -625,7 +625,7 @@ function filter($clogAdmin, $selectedFile) {
 
 		function clearFilter() {
 			strURL = basename(location.pathname) + '?clear=1&nostate=true';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function refreshFilter() {
@@ -639,7 +639,7 @@ function filter($clogAdmin, $selectedFile) {
 				'&tail_lines='+$('#tail_lines').val()+
 				'&filename='+$('#filename').val();
 
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 		</script>
 		</td>

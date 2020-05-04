@@ -532,7 +532,7 @@ function filter() {
 					'?filter='+$('#filter').val()+
 					'&age='+$('#age').val()+
 					'&rows='+$('#rows').val();
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {
@@ -547,7 +547,7 @@ function filter() {
 
 				$('#clear').click(function() {
 					strURL = 'rrdcleaner.php?clear=1';
-					loadPageNoHeader(strURL);
+					loadUrl({url:strURL})
 				});
 
 				$('#rescan').click(function() {

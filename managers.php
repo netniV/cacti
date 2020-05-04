@@ -111,12 +111,12 @@ function manager(){
 		strURL  = 'managers.php';
 		strURL += '?filter=' + $('#filter').val();
 		strURL += '&rows=' + $('#rows').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'managers.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -314,7 +314,7 @@ function manager_edit() {
 
 				strURL  = $(this).attr('href');
 				strURL += (strURL.indexOf('?') > 0 ? '&':'?');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			});
 		});
 		</script>
@@ -443,12 +443,12 @@ function manager_notifications($id, $header_label) {
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'managers.php?action=edit&tab=notifications&id=<?php echo $id; ?>&clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -687,7 +687,7 @@ function manager_logs($id, $header_label) {
 		strURL  = '?severity=' + $('#severity').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&action=edit&tab=logs&id=<?php print get_request_var('id'); ?>';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function showTooltip(e, div, title, desc) {

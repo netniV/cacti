@@ -304,12 +304,12 @@ function update_show_current () {
 		strURL += '?filter='+$('#filter').val();
 		strURL += '&rows='+$('#rows').val();
 		strURL += '&state='+$('#state').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'plugins.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

@@ -747,7 +747,7 @@ function settings_javascript() {
 		$('input[value="<?php print __esc('Save');?>"]').unbind().click(function(event) {
 			event.preventDefault();
 			$.post('auth_profile.php', $('input, select, textarea').serialize()).done(function(data) {
-				loadPageNoHeader('auth_profile.php?action=noreturn');
+				loadUrl({url:'auth_profile.php?action=noreturn'})
 			});
 		});
 

@@ -574,7 +574,7 @@ function item_edit() {
 			'&data_template_id='+$('#data_template_id').val()+
 			'&host_id='+$('#host_id').val();
 
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function setRowVisibility() {

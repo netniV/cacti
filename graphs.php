@@ -1350,7 +1350,7 @@ function item() {
 	$(function() {
 		$('.deleteMarker, .moveArrow').unbind().click(function(event) {
 			event.preventDefault();
-			loadPageNoHeader($(this).attr('href'));
+			loadUrl({url:$(this).attr('href')})
 		});
 	});
 	</script>
@@ -1717,7 +1717,7 @@ function graph_edit() {
 		$('#lockid').click(function(event) {
 			event.preventDefault;
 
-			loadPageNoHeader('graphs.php?action=lock&id='+$('#local_graph_id').val());
+			loadUrl({url:'graphs.php?action=lock&id='+$('#local_graph_id').val()})
 		});
 
 		$(window).resize(function() {
@@ -1853,12 +1853,12 @@ function graph_management() {
 			'&orphans=' + $('#orphans').is(':checked') +
 			'&rfilter=' + base64_encode($('#rfilter').val()) +
 			'&template_id=' + $('#template_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'graphs.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

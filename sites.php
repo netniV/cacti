@@ -508,12 +508,12 @@ function sites() {
 				strURL  = 'sites.php';
 				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'sites.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

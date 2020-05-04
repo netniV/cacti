@@ -251,11 +251,11 @@ class CactiTableFilter {
 
 		function applyFilter() {
 			strURL = <?php print $applyFilter;?>
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
-			loadPageNoHeader(<?php print $clearFilter;?>);
+			loadUrl({url:<?php print $clearFilter;?>})
 		}
 
 		$(function() {

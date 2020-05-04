@@ -353,7 +353,7 @@ function vdef_item_remove_confirm() {
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
-				loadPageNoHeader('vdef.php?action=edit&id=<?php print get_request_var('id');?>');
+				loadUrl({url:'vdef.php?action=edit&id=<?php print get_request_var('id');?>'})
 			});
 		});
 	});
@@ -486,7 +486,7 @@ function vdef_item_edit() {
 			strURL += '&id=' + $('#id').val();
 			strURL += '&vdef_id=' + $('#vdef_id').val();
 			strURL += '&type_select=' + $('#type_select').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		});
 	});
 	</script>
@@ -658,7 +658,7 @@ function vdef_edit() {
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#vdef_item').unbind().tableDnD({
 			onDrop: function(table, row) {
-				loadPageNoHeader('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+				loadUrl({url:'vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize()})
 			}
 		});
 		<?php } ?>
@@ -737,12 +737,12 @@ function vdef_filter() {
 				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_graphs='+$('#has_graphs').is(':checked');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'vdef.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

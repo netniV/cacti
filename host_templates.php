@@ -762,12 +762,12 @@ function template() {
 			strURL += '?filter='+$('#filter').val();
 			strURL += '&rows='+$('#rows').val();
 			strURL += '&has_hosts='+$('#has_hosts').is(':checked');
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'host_templates.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

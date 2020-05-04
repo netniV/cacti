@@ -1195,12 +1195,12 @@ function aggregate_items() {
 			'&rows=' + $('#rows').val() +
 			'&rfilter=' + base64_encode($('#rfilter').val()) +
 			'&matching=' + $('#matching').is(':checked');
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'aggregate_graphs.php?action=edit&tab=items&id='+$('#id').val()+'&clear=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -1475,12 +1475,12 @@ function aggregate_graph() {
 		strURL += '?rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'aggregate_graphs.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

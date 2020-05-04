@@ -875,12 +875,12 @@ function pollers() {
 				strURL += '?filter='+$('#filter').val();
 				strURL += '&refresh='+$('#refresh').val();
 				strURL += '&rows='+$('#rows').val();
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'pollers.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

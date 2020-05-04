@@ -1237,13 +1237,13 @@ function networks_filter() {
 				strURL += '&filter=' + $('#filter').val();
 				strURL += '&refresh=' + $('#refresh').val();
 
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = '?clear=true';
 
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

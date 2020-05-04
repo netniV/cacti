@@ -427,12 +427,12 @@ function template() {
 					'?filter='     + $('#filter').val() +
 					'&rows='       + $('#rows').val() +
 					'&has_graphs=' + $('#has_graphs').is(':checked');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'automation_templates.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {
@@ -559,23 +559,22 @@ function template() {
 	?>
 	<script type='text/javascript'>
 	$(function() {
-        $('#automation_templates2_child').attr('id', 'template_ids');
+		$('#automation_templates2_child').attr('id', 'template_ids');
 
 		$('img.action').click(function() {
 			strURL = $(this).attr('href');
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		});
 
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#template_ids').find('tr:first').addClass('nodrag').addClass('nodrop');
 
-        $('#template_ids').tableDnD({
-            onDrop: function(table, row) {
-                loadPageNoHeader('automation_templates.php?action=ajax_dnd&'+$.tableDnD.serialize());
-            }
-        });
+		$('#template_ids').tableDnD({
+			onDrop: function(table, row) {
+				loadUrl({url:'automation_templates.php?action=ajax_dnd&'+$.tableDnD.serialize()})
+			}
+		});
 		<?php } ?>
-
 	});
 	</script>
 	<?php

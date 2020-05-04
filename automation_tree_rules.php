@@ -670,7 +670,7 @@ function automation_tree_rules_edit() {
 		strURL += '&leaf_type=' + $('#leaf_type').val();
 		strURL += '&enabled=' + $('#enabled').val();
 
-		loadPageNoHeader(strURL,undefined,force);
+		loadUrl({url:strURL,undefined,force})
 	}
 
 	function applyItemTypeChange() {
@@ -853,12 +853,12 @@ function automation_tree_rules() {
 					'&filter='+$('#filter').val() +
 					'&rows='+$('#rows').val();
 
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'automation_tree_rules.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

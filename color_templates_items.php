@@ -292,7 +292,7 @@ function aggregate_color_item_remove_confirm() {
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
-				loadPageNoHeader('color_templates.php?action=template_edit&color_template_id=<?php print get_request_var('id');?>');
+				loadUrl({url:'color_templates.php?action=template_edit&color_template_id=<?php print get_request_var('id');?>'})
 			});
 		});
 	});

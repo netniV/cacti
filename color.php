@@ -580,12 +580,12 @@ function color() {
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_graphs='+$('#has_graphs').is(':checked');
 				strURL += '&named='+$('#named').is(':checked');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'color.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {
@@ -612,7 +612,7 @@ function color() {
 
 				$('#import').click(function(event) {
 					strURL = 'color.php?action=import';
-					loadPageNoHeader(strURL);
+					loadUrl({url:strURL})
 				});
 
 				$('#export').click(function(event) {

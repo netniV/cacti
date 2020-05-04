@@ -1280,12 +1280,12 @@ function ds() {
 			'&profile=' + $('#profile').val() +
 			'&orphans=' + $('#orphans').val() +
 			'&template_id=' + $('#template_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'data_sources.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

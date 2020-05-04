@@ -683,12 +683,12 @@ function domains() {
 		function applyFilter() {
 			strURL  = 'user_domains.php?rows=' + $('#rows').val();
 			strURL += '&filter=' + $('#filter').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'user_domains.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

@@ -418,7 +418,7 @@ function profile_item_remove_confirm() {
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
-				loadPageNoHeader('data_source_profiles.php?action=edit&id=<?php print $profile['data_source_profile_id'];?>');
+				loadUrl({url:'data_source_profiles.php?action=edit&id=<?php print $profile['data_source_profile_id'];?>'})
 			});
 		});
 	});
@@ -931,12 +931,12 @@ function profile() {
 				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_data='+$('#has_data').is(':checked');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'data_source_profiles.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

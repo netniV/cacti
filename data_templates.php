@@ -969,12 +969,12 @@ function template() {
 			strURL += '&rows='+$('#rows').val();
 			strURL += '&profile='+$('#profile').val();
 			strURL += '&has_data='+$('#has_data').is(':checked');
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'data_templates.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

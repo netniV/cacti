@@ -373,7 +373,7 @@ function field_remove_confirm() {
 				data_input_id: <?php print get_request_var('data_input_id');?>,
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
-				loadPageNoHeader('data_input.php?action=edit&id=<?php print get_request_var('data_input_id');?>');
+				loadUrl({url:'data_input.php?action=edit&id=<?php print get_request_var('data_input_id');?>'})
 			});
 		});
 
@@ -836,12 +836,12 @@ function data() {
 			strURL  = 'data_input.php';
 			strURL += '?filter='+$('#filter').val();
 			strURL += '&rows='+$('#rows').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'data_input.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

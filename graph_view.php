@@ -818,7 +818,7 @@ case 'list':
 
 	function clearFilter() {
 		strURL = 'graph_view.php?action=list&clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function applyFilter() {
@@ -828,7 +828,7 @@ case 'list':
 		strURL += '&graph_template_id=' + $('#graph_template_id').val();
 		strURL += '&rfilter=' + base64_encode($('#rfilter').val());
 		strURL += url_graph('');
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function initializeChecks() {
@@ -871,7 +871,7 @@ case 'list':
 
 		strURL += '&reset=true';
 
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 
 		$('#breadcrumbs').empty().html('<li><a href="graph_view.php?action=preview"><?php print __('Preview Mode');?></a></li>');
 		$('#listview').removeClass('selected');
@@ -945,7 +945,7 @@ case 'list':
 							'&align='       + $('#align').val()      +
 							'&graph_list='  + $('#graph_list').val();
 
-						loadPageNoHeader(strURL);
+						loadUrl({url:strURL})
 					}
 				}
 			],

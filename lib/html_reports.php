@@ -862,7 +862,7 @@ function reports_item_edit() {
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&host_id=' + $('#host_id').val();
 		strURL += '&graph_template_id=' + $('#graph_template_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function graphImage(graphId) {
@@ -1263,7 +1263,7 @@ function reports_edit() {
 				<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 				$('#report_item').tableDnD({
 					onDrop: function(table, row) {
-						loadPageNoHeader(reportsPage+'?action=ajax_dnd&id='+reportId+'&'+$.tableDnD.serialize());
+						loadUrl({url:reportsPage+'?action=ajax_dnd&id='+reportId+'&'+$.tableDnD.serialize()})
 					}
 				});
 				<?php } ?>
@@ -1663,12 +1663,12 @@ function reports() {
 		strURL  = '<?php print get_reports_page();?>?status=' + $('#status').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = '<?php print get_reports_page();?>?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

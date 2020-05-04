@@ -1083,17 +1083,17 @@ function data_debug_filter() {
 				'&profile=' + $('#profile').val() +
 				'&debug=' + $('#debug').val() +
 				'&template_id=' + $('#template_id').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'data_debug.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function purgeFilter() {
 			strURL = 'data_debug.php?purge=1&debug=-1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

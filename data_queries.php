@@ -557,7 +557,7 @@ function data_query_item_remove_confirm() {
 				id: <?php print get_request_var('id');?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
-				loadPageNoHeader('data_queries.php?action=edit&id=<?php print get_request_var('snmp_query_id');?>');
+				loadUrl({url:'data_queries.php?action=edit&id=<?php print get_request_var('snmp_query_id');?>'})
 			});
 		});
 	});
@@ -1276,12 +1276,12 @@ function data_query() {
 			strURL  = 'data_queries.php';
 			strURL += '?filter='+$('#filter').val();
 			strURL += '&rows='+$('#rows').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'data_queries.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

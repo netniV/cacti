@@ -1542,12 +1542,12 @@ function tree() {
 	function applyFilter() {
 		strURL  = 'tree.php?rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = 'tree.php?clear=1';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -1560,11 +1560,11 @@ function tree() {
 		});
 
 		$('#sorta').click(function() {
-			loadPageNoHeader('tree.php?action=sortasc');
+			loadUrl({url:'tree.php?action=sortasc'})
 		});
 
 		$('#sortd').click(function() {
-			loadPageNoHeader('tree.php?action=sortdesc');
+			loadUrl({url:'tree.php?action=sortdesc'})
 		});
 
 		$('#form_tree').submit(function(event) {
@@ -1823,7 +1823,7 @@ function tree() {
 
 			$('#tree_ids').tableDnD({
 				onDrop: function(table, row) {
-					loadPageNoHeader('tree.php?action=ajax_dnd&'+$.tableDnD.serialize());
+					loadUrl({url:'tree.php?action=ajax_dnd&'+$.tableDnD.serialize()})
 				}
 			});
 			<?php } ?>

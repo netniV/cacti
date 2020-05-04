@@ -430,7 +430,7 @@ default:
 			event.preventDefault();
 			strURL = $(this).attr('href');
 			strURL += (strURL.indexOf('?') > 0 ? '&':'?');
-			loadPageNoHeader(strURL, true, false);
+			loadUrl({url:strURL, scroll:true});
 		});
 
 		$('input[value="<?php print __esc('Save');?>"]').click(function(event) {

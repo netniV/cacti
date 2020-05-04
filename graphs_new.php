@@ -320,11 +320,11 @@ function graphs() {
 		strURL += '&host_id=' + $('#host_id').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&rows=' + $('#rows').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
-		loadPageNoHeader('graphs_new.php?clear=true');
+		loadUrl({url:'graphs_new.php?clear=true'})
 	}
 
 	function saveFilter() {
@@ -344,7 +344,7 @@ function graphs() {
 	$(function() {
 		$('[id^="reload"]').click(function(data) {
 			$(this).addClass('fa-spin');
-			loadPageNoHeader('graphs_new.php?action=query_reload&id='+$(this).attr('data-id')+'&host_id='+$('#host_id').val());
+			loadUrl({url:'graphs_new.php?action=query_reload&id='+$(this).attr('data-id')+'&host_id='+$('#host_id').val()})
 		});
 
 		$('#clear').click(function() {

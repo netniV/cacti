@@ -659,7 +659,7 @@ function automation_graph_rules_edit() {
 		strURL += '&id=' + $('#id').val();
 		strURL += '&name=' + $('#name').val();
 		strURL += '&snmp_query_id=' + $('#snmp_query_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function applySNMPQueryTypeChange() {
@@ -667,7 +667,7 @@ function automation_graph_rules_edit() {
 		strURL += '&id=' + $('#id').val();
 		strURL += '&name=' + $('#name').val();
 		strURL += '&graph_type_id=' + $('#graph_type_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 	</script>
 	<?php
@@ -805,12 +805,12 @@ function automation_graph_rules() {
 				'&filter='        + $('#filter').val()+
 				'&rows='          + $('#rows').val()+
 				'&snmp_query_id=' + $('#snmp_query_id').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'automation_graph_rules.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {

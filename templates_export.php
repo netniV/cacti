@@ -185,7 +185,7 @@ function export() {
 	$(function() {
 		$('#export_type').change(function() {
 			strURL = 'templates_export.php?export_type='+$('#export_type').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		});
 	});
 	</script>

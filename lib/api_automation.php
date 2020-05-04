@@ -100,12 +100,12 @@ function display_matching_hosts($rule, $rule_type, $url) {
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rowsd=' + $('#rowsd').val();
 		strURL += '&filterd=' + $('#filterd').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearDeviceFilter() {
 		strURL = '<?php print $url;?>&cleard=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -381,12 +381,12 @@ function display_matching_graphs($rule, $rule_type, $url) {
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = '<?php print $url;?>&clear=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -663,12 +663,12 @@ function display_new_graphs($rule, $url) {
 		strURL  = '<?php print $url;?>';
 		strURL += '&rows=' + $('#orows').val();
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearObjectFilter() {
 		strURL = '<?php print $url;?>&oclear=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {
@@ -1023,12 +1023,12 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	function clearFilter() {
 		strURL = '<?php print $url;?>&clear=true';
-		loadPageNoHeader(strURL);
+		loadUrl({url:strURL})
 	}
 
 	$(function() {

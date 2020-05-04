@@ -572,7 +572,7 @@ function draw_filter() {
 			});
 
 			$('#purge').click(function() {
-				loadPageNoHeader('automation_devices.php?action=purge&network_id='+$('#network').val());
+				loadUrl({url:'automation_devices.php?action=purge&network_id='+$('#network').val()})
 			});
 
 			$('#export').click(function() {
@@ -581,7 +581,7 @@ function draw_filter() {
 		});
 
 		function clearFilter() {
-			loadPageNoHeader('automation_devices.php?clear=1');
+			loadUrl({url:'automation_devices.php?clear=1'})
 		}
 
 		function applyFilter() {
@@ -593,7 +593,7 @@ function draw_filter() {
 			strURL += '&filter=' + $('#filter').val();
 			strURL += '&rows=' + $('#rows').val();
 
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		</script>

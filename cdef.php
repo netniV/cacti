@@ -367,7 +367,7 @@ function cdef_item_remove_confirm() {
 			}, function(data) {
 				$('#cdialog').dialog('close');
 				$('.deleteMarker').blur();
-				loadPageNoHeader('cdef.php?action=edit&id=<?php print get_request_var('id');?>');
+				loadUrl({url:'cdef.php?action=edit&id=<?php print get_request_var('id');?>'})
 			});
 		});
 	});
@@ -529,7 +529,7 @@ function item_edit() {
 			strURL += '&id=' + $('#id').val();
 			strURL += '&cdef_id=' + $('#cdef_id').val();
 			strURL += '&type_select=' + $('#type_select').val();
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		});
 	});
 	</script>
@@ -672,7 +672,7 @@ function cdef_edit() {
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#cdef_item').tableDnD({
 			onDrop: function(table, row) {
-				loadPageNoHeader('cdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+				loadUrl({url:'cdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize()})
 			}
 		});
 		<?php } ?>
@@ -794,12 +794,12 @@ function cdef() {
 				strURL += '?filter='+$('#filter').val();
 				strURL += '&rows='+$('#rows').val();
 				strURL += '&has_graphs='+$('#has_graphs').is(':checked');
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			function clearFilter() {
 				strURL = 'cdef.php?clear=1';
-				loadPageNoHeader(strURL);
+				loadUrl({url:strURL})
 			}
 
 			$(function() {

@@ -485,7 +485,7 @@ function item() {
 	$(function() {
 		$('.deleteMarker, .moveArrow').click(function(event) {
 			event.preventDefault();
-			loadPageNoHeader($(this).attr('href'));
+			loadUrl({url:$(this).attr('href')})
 		});
 	});
 	</script>
@@ -702,12 +702,12 @@ function template() {
 			strURL += '&filter='+$('#filter').val();
 			strURL += '&rows='+$('#rows').val();
 			strURL += '&has_graphs='+$('#has_graphs').is(':checked');
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		function clearFilter() {
 			strURL = 'graph_templates.php?clear=1';
-			loadPageNoHeader(strURL);
+			loadUrl({url:strURL})
 		}
 
 		$(function() {
