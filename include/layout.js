@@ -1893,6 +1893,7 @@ function loadUrl(options) {
 			window[options.funcStart](options);
 		}
 
+		debugger;
 		$.ajaxQ.abortAll();
 		$.get(options.url)
 			.done(function(html) {
@@ -1929,6 +1930,10 @@ function sanitizeAjaxOptions(check) {
 		pageName:	'',
 		noState:	false,
 	};
+
+	if (typeof check == 'undefined') {
+		check = {};
+	}
 
 	if (typeof check.url == 'string') {
 		options.url = check.url;
@@ -2958,12 +2963,7 @@ function refreshGraphTimespanFilter() {
 
 	$.ajaxQ.abortAll();
 	$.post(href, json).done(function(data) {
-		checkForLogout(data);
-
-		$('#main').empty().hide();
-		$('div[class^="ui-"]').remove();
-		$('#main').html(data);
-		applySkin();
+		handleAjaxResponse(data);
 	});
 }
 
