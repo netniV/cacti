@@ -194,7 +194,7 @@ function clog_view_logfile() {
 	$page_nr = get_request_var('page');
 
 	$page = $config['url_path'] . 'clog' . (!$clogAdmin ? '_user' : '') . '.php';
-	$page .= '&filename=' . basename($logfile) . '&page=' . $page_nr;
+	$page .= '?filename=' . basename($logfile) . '&page=' . $page_nr;
 
 	$refresh = array(
 		'seconds' => get_request_var('refresh'),

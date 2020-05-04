@@ -2905,7 +2905,7 @@ function pushState(myTitle, options) {
 	if (!options.noState) {
 		if (statePushed == false) {
 			if (typeof window.history.pushState != 'undefined') {
-				var myObject = { Page: myTitle, Url: cleanUrlParameters(myHref), Options: Object.assign({}, options) };
+				var myObject = { Page: myTitle, Url: cleanUrlParameters(options.url), Options: Object.assign({}, options) };
 				window.history.pushState(myObject, myObject.Page, myObject.Url);
 			}
 		}
