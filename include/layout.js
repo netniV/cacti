@@ -1858,7 +1858,7 @@ function getStackTrace(levels) {
 
 function loadPage(href, force) {
 	var stack = ''; //getStackTrace(); // new Error().stack;
-	console.error("Function loadPage is still being called, but is now depreciated:\n" + stack);
+	console.error("Function loadPage is now depreciated, use loadUrl instead\n" + stack);
 	return loadUrl({
 		url:href,
 		force:force,
@@ -1868,7 +1868,7 @@ function loadPage(href, force) {
 
 function loadPageNoHeader(href, scroll, force) {
 	var stack = ''; //getStackTrace(); // new Error().stack;
-	console.error("Function loadPageNoHeader is still being called, but is now depreciated:\n" + stack);
+	console.error("Function loadPageNoHeader is now depreciated, load loadUrl instead\n" + stack);
 	return loadUrl({
 		url:href,
 		scroll:scroll,
@@ -1934,7 +1934,7 @@ function sanitizeAjaxOptions(check) {
 		options.url = check.url;
 		var hrefParts = options.url.split('?');
 		options.pageName = basename(hrefParts[0]);
-		noState = options.url.indexOf('nostate') > -1;
+		options.noState = options.url.indexOf('nostate') > -1;
 	}
 
 	if (typeof check.noState != 'undefined') {
