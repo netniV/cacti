@@ -764,12 +764,12 @@ function tree_edit() {
 
 			$('#lock').click(function() {
 				strURL = 'tree.php?action=lock&id=<?php print $tree['id'];?>';
-				loadPage(strURL);
+				loadUrl({url:strURL})
 			});
 
 			$('#unlock').click(function() {
 				strURL = 'tree.php?action=unlock&id=<?php print $tree['id'];?>';
-				loadPage(strURL);
+				loadUrl({url:strURL})
 			});
 
 			var height  = parseInt($(window).height()-$('#ctree').offset().top-10)+'px';

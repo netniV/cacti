@@ -863,18 +863,18 @@ function debug_view() {
 		$('.repairme').click(function(event) {
 			event.preventDefault();
 			id = $(this).attr('data-id');
-			loadPage('data_debug.php?action=run_repair&id=' + id);
+			loadUrl({url:'data_debug.php?action=run_repair&id=' + id})
 		});
 
 		$('.reloadquery').click(function() {
 			id = $(this).attr('data-id');
-			loadPage('data_debug.php?action=view&id=' + id);
+			loadUrl({url:'data_debug.php?action=view&id=' + id})
 		});
 
 		$('.rerun').click(function(event) {
 			event.preventDefault();
 			id = $(this).attr('data-id');
-			loadPage('data_debug.php?action=run_debug&id=' + id);
+			loadUrl({url:'data_debug.php?action=run_debug&id=' + id})
 		});
 	});
 	</script>
